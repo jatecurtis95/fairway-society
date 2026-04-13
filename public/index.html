@@ -1,0 +1,1741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Fairway Society | Golf. Network. Connect.</title>
+    <meta name="description" content="The Fairway Society - An exclusive golf networking group bringing together like-minded professionals on the fairway since 2025.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cream: #F5F0E6;
+            --cream-light: #FAF7F0;
+            --green-dark: #1B3A2D;
+            --green-mid: #2D5A43;
+            --green-light: #3D7A5A;
+            --gold: #B8964E;
+            --gold-light: #D4B06A;
+            --gold-dark: #96783E;
+            --text-dark: #1B3A2D;
+            --text-body: #4A5D52;
+            --white: #FFFFFF;
+            --border: rgba(184, 150, 78, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-dark);
+            background: var(--cream);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        /* ===== NAVIGATION ===== */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1.2rem 2rem;
+            transition: all 0.4s ease;
+            background: transparent;
+        }
+
+        .nav.scrolled {
+            background: rgba(27, 58, 45, 0.97);
+            backdrop-filter: blur(12px);
+            padding: 0.8rem 2rem;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.15);
+        }
+
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--gold);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--cream);
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--gold);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .nav-cta {
+            background: transparent !important;
+            border: 1px solid var(--gold) !important;
+            padding: 0.6rem 1.5rem !important;
+            color: var(--gold) !important;
+            font-size: 0.75rem !important;
+            letter-spacing: 2px !important;
+            transition: all 0.3s !important;
+        }
+
+        .nav-cta:hover {
+            background: var(--gold) !important;
+            color: var(--green-dark) !important;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 5px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 2px;
+            background: var(--cream);
+            transition: all 0.3s;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            background: var(--green-dark);
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(135deg, rgba(27, 58, 45, 0.95) 0%, rgba(27, 58, 45, 0.8) 50%, rgba(27, 58, 45, 0.95) 100%),
+                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="p" patternUnits="userSpaceOnUse" width="40" height="40"><path d="M0 20 Q10 15 20 20 Q30 25 40 20" stroke="rgba(184,150,78,0.06)" fill="none" stroke-width="0.5"/></pattern></defs><rect fill="url(%23p)" width="100" height="100"/></svg>');
+            background-size: cover, 200px 200px;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            padding: 2rem;
+            max-width: 800px;
+        }
+
+        .hero-logo {
+            width: 240px;
+            height: 240px;
+            margin: 0 auto 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+        }
+
+        .hero-tagline {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 300;
+            color: var(--cream);
+            line-height: 1.15;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 em {
+            font-style: italic;
+            color: var(--gold);
+        }
+
+        .hero-desc {
+            font-size: 1.05rem;
+            color: rgba(245, 240, 230, 0.7);
+            line-height: 1.8;
+            max-width: 550px;
+            margin: 0 auto 2.5rem;
+            font-weight: 300;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--gold);
+            color: var(--green-dark);
+        }
+
+        .btn-primary:hover {
+            background: var(--gold-light);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(184, 150, 78, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--cream);
+            border: 1px solid rgba(245, 240, 230, 0.3);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            transform: translateY(-2px);
+        }
+
+        .hero-scroll {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+        }
+
+        .hero-scroll a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: rgba(245, 240, 230, 0.4);
+            font-size: 0.65rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, var(--gold), transparent);
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* ===== SECTIONS ===== */
+        section {
+            padding: 6rem 2rem;
+        }
+
+        .section-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 400;
+            color: var(--green-dark);
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        .section-divider {
+            width: 60px;
+            height: 1px;
+            background: var(--gold);
+            margin: 1.5rem auto;
+        }
+
+        .section-subtitle {
+            font-size: 1rem;
+            color: var(--text-body);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.8;
+            font-weight: 300;
+        }
+
+        /* ===== ABOUT ===== */
+        .about {
+            background: var(--cream-light);
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-text h3 {
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            color: var(--green-dark);
+        }
+
+        .about-text p {
+            color: var(--text-body);
+            line-height: 1.9;
+            margin-bottom: 1.2rem;
+            font-size: 0.95rem;
+            font-weight: 300;
+        }
+
+        .about-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 2.5rem;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .stat-number {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--gold);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-body);
+            margin-top: 0.3rem;
+        }
+
+        .about-image {
+            position: relative;
+        }
+
+        .about-image-main {
+            width: 100%;
+            aspect-ratio: 4/5;
+            background: var(--green-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-image-main::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(135deg, var(--green-dark) 0%, var(--green-mid) 100%);
+        }
+
+        .about-image-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            color: var(--cream);
+            padding: 2rem;
+        }
+
+        .about-image-content svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 1.5rem;
+            opacity: 0.6;
+        }
+
+        .about-image-content p {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-style: italic;
+            line-height: 1.6;
+            color: rgba(245, 240, 230, 0.8);
+        }
+
+        .about-image-accent {
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 100px;
+            height: 100px;
+            border: 1px solid var(--gold);
+            opacity: 0.4;
+        }
+
+        /* ===== WHY JOIN ===== */
+        .features {
+            background: var(--green-dark);
+            color: var(--cream);
+        }
+
+        .features .section-title {
+            color: var(--cream);
+        }
+
+        .features .section-subtitle {
+            color: rgba(245, 240, 230, 0.6);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2.5rem;
+        }
+
+        .feature-card {
+            padding: 2.5rem;
+            border: 1px solid rgba(184, 150, 78, 0.15);
+            transition: all 0.4s;
+            position: relative;
+        }
+
+        .feature-card:hover {
+            border-color: rgba(184, 150, 78, 0.4);
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 1.5rem;
+            color: var(--gold);
+        }
+
+        .feature-card h4 {
+            font-size: 1.4rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            color: var(--cream);
+        }
+
+        .feature-card p {
+            font-size: 0.9rem;
+            line-height: 1.8;
+            color: rgba(245, 240, 230, 0.6);
+            font-weight: 300;
+        }
+
+        /* ===== EVENTS ===== */
+        .events {
+            background: var(--cream-light);
+        }
+
+        .events-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .event-card {
+            display: grid;
+            grid-template-columns: 120px 1fr auto;
+            gap: 2rem;
+            padding: 2rem;
+            background: var(--white);
+            border: 1px solid var(--border);
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .event-card:hover {
+            border-color: var(--gold);
+            box-shadow: 0 8px 30px rgba(184, 150, 78, 0.1);
+            transform: translateX(5px);
+        }
+
+        .event-date {
+            text-align: center;
+            padding: 1rem;
+            border-right: 1px solid var(--border);
+        }
+
+        .event-month {
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold);
+        }
+
+        .event-day {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--green-dark);
+            line-height: 1;
+            margin: 0.3rem 0;
+        }
+
+        .event-year {
+            font-size: 0.75rem;
+            color: var(--text-body);
+        }
+
+        .event-info h4 {
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: var(--green-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .event-info p {
+            font-size: 0.85rem;
+            color: var(--text-body);
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        .event-location {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--gold);
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        .event-action .btn {
+            padding: 0.8rem 1.8rem;
+            font-size: 0.7rem;
+            white-space: nowrap;
+        }
+
+        .event-action .btn-outline {
+            color: var(--green-dark);
+            border-color: var(--border);
+        }
+
+        .event-action .btn-outline:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        /* ===== TESTIMONIALS ===== */
+        .testimonials {
+            background: var(--cream);
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .testimonial-card {
+            padding: 2.5rem;
+            background: var(--white);
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .testimonial-quote {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem;
+            color: var(--gold);
+            opacity: 0.3;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .testimonial-card p {
+            font-size: 0.95rem;
+            line-height: 1.9;
+            color: var(--text-body);
+            font-weight: 300;
+            font-style: italic;
+            margin-bottom: 1.5rem;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .testimonial-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--green-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .testimonial-name {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--green-dark);
+        }
+
+        .testimonial-role {
+            font-size: 0.75rem;
+            color: var(--text-body);
+            font-weight: 300;
+        }
+
+        /* ===== MEMBERSHIP ===== */
+        .membership {
+            background: var(--green-dark);
+            color: var(--cream);
+        }
+
+        .membership .section-title {
+            color: var(--cream);
+        }
+
+        .membership .section-subtitle {
+            color: rgba(245, 240, 230, 0.6);
+        }
+
+        .membership-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .membership-card {
+            padding: 3rem 2rem;
+            border: 1px solid rgba(184, 150, 78, 0.15);
+            text-align: center;
+            transition: all 0.4s;
+            position: relative;
+        }
+
+        .membership-card.featured {
+            border-color: var(--gold);
+            background: rgba(184, 150, 78, 0.05);
+        }
+
+        .membership-card.featured::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gold);
+            color: var(--green-dark);
+            padding: 0.3rem 1.2rem;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .membership-card:hover {
+            border-color: rgba(184, 150, 78, 0.4);
+            transform: translateY(-5px);
+        }
+
+        .membership-tier {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .membership-price {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem;
+            font-weight: 600;
+            color: var(--cream);
+            margin-bottom: 0.3rem;
+        }
+
+        .membership-period {
+            font-size: 0.8rem;
+            color: rgba(245, 240, 230, 0.5);
+            margin-bottom: 2rem;
+        }
+
+        .membership-features {
+            list-style: none;
+            margin-bottom: 2.5rem;
+        }
+
+        .membership-features li {
+            padding: 0.6rem 0;
+            font-size: 0.85rem;
+            color: rgba(245, 240, 230, 0.7);
+            font-weight: 300;
+            border-bottom: 1px solid rgba(184, 150, 78, 0.08);
+        }
+
+        .membership-features li:last-child {
+            border: none;
+        }
+
+        .membership-card .btn {
+            width: 100%;
+            text-align: center;
+        }
+
+        /* ===== CONTACT ===== */
+        .contact {
+            background: var(--cream-light);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+
+        .contact-info h3 {
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            color: var(--green-dark);
+        }
+
+        .contact-info p {
+            color: var(--text-body);
+            line-height: 1.9;
+            font-weight: 300;
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+        }
+
+        .contact-details {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .contact-details li {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-body);
+        }
+
+        .contact-details svg {
+            width: 20px;
+            height: 20px;
+            color: var(--gold);
+            flex-shrink: 0;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-body);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            padding: 0.9rem 1rem;
+            border: 1px solid var(--border);
+            background: var(--white);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            transition: border-color 0.3s;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--gold);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .contact-form .btn {
+            align-self: flex-start;
+        }
+
+        /* ===== SPONSORS ===== */
+        .sponsors {
+            background: var(--cream);
+        }
+
+        .sponsors-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+        }
+
+        .sponsor-card {
+            padding: 2rem 1.5rem;
+            background: var(--white);
+            border: 1px solid var(--border);
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100px;
+            transition: all 0.3s;
+        }
+
+        .sponsor-card:hover {
+            border-color: var(--gold);
+            box-shadow: 0 6px 20px rgba(184, 150, 78, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .sponsor-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--green-dark);
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 968px) {
+            .sponsors-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .sponsors-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: var(--green-dark);
+            color: var(--cream);
+            padding: 4rem 2rem 2rem;
+        }
+
+        .footer-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .footer-top {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+            padding-bottom: 3rem;
+            border-bottom: 1px solid rgba(184, 150, 78, 0.15);
+        }
+
+        .footer-brand p {
+            font-size: 0.85rem;
+            color: rgba(245, 240, 230, 0.5);
+            line-height: 1.8;
+            font-weight: 300;
+            margin-top: 1rem;
+            max-width: 300px;
+        }
+
+        .footer-col h5 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 1.2rem;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col a {
+            color: rgba(245, 240, 230, 0.5);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 300;
+            line-height: 2.2;
+            transition: color 0.3s;
+        }
+
+        .footer-col a:hover {
+            color: var(--gold);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 2rem;
+        }
+
+        .footer-bottom p {
+            font-size: 0.75rem;
+            color: rgba(245, 240, 230, 0.35);
+            font-weight: 300;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .footer-social a {
+            width: 36px;
+            height: 36px;
+            border: 1px solid rgba(184, 150, 78, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            color: rgba(245, 240, 230, 0.5);
+        }
+
+        .footer-social a:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .footer-social svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== MOBILE MENU ===== */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(27, 58, 45, 0.98);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mobile-menu.active {
+            display: flex;
+        }
+
+        .mobile-menu-links {
+            list-style: none;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .mobile-menu-links a {
+            text-decoration: none;
+            color: var(--cream);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-weight: 400;
+            transition: color 0.3s;
+        }
+
+        .mobile-menu-links a:hover {
+            color: var(--gold);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 968px) {
+            .nav-links { display: none; }
+            .hamburger { display: flex; }
+
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .about-image { order: -1; }
+            .about-image-main { aspect-ratio: 16/9; }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .event-card {
+                grid-template-columns: 100px 1fr;
+                gap: 1.5rem;
+            }
+
+            .event-action { display: none; }
+
+            .testimonial-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .membership-grid {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+                margin: 0 auto;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .footer-top {
+                grid-template-columns: 1fr 1fr;
+                gap: 2rem;
+            }
+
+            .footer-brand {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (max-width: 600px) {
+            section { padding: 4rem 1.5rem; }
+
+            .hero-logo {
+                width: 150px;
+                height: 150px;
+            }
+
+            .about-stats {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .stat { padding: 1rem; }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .event-card {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .event-date {
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                padding-bottom: 1rem;
+            }
+
+            .footer-top {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <div class="nav-inner">
+            <a href="#" class="nav-logo">The Fairway Society</a>
+            <ul class="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#why-join">Why Join</a></li>
+                <li><a href="#events">Events</a></li>
+                <li><a href="/tee-times">Find Tee Times</a></li>
+                <li><a href="#membership">Membership</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#contact" class="nav-cta">Join Now</a></li>
+            </ul>
+            <button class="hamburger" id="hamburger" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <ul class="mobile-menu-links">
+            <li><a href="#about" onclick="closeMobile()">About</a></li>
+            <li><a href="#why-join" onclick="closeMobile()">Why Join</a></li>
+            <li><a href="#events" onclick="closeMobile()">Events</a></li>
+            <li><a href="/tee-times">Find Tee Times</a></li>
+            <li><a href="#membership" onclick="closeMobile()">Membership</a></li>
+            <li><a href="#contact" onclick="closeMobile()">Contact</a></li>
+            <li><a href="#contact" onclick="closeMobile()" style="color: var(--gold)">Join Now</a></li>
+        </ul>
+    </div>
+
+    <!-- Hero -->
+    <section class="hero" id="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <div class="hero-tagline">Est. 2025 &bull; Golf &bull; Network &bull; Connect</div>
+            <h1>Where the <em>Fairway</em><br>Meets Opportunity</h1>
+            <p class="hero-desc">An exclusive society of golf enthusiasts who believe the best connections are made between tee and green.</p>
+            <div class="hero-buttons">
+                <a href="#membership" class="btn btn-primary">Become a Member</a>
+                <a href="#about" class="btn btn-outline">Learn More</a>
+            </div>
+        </div>
+        <div class="hero-scroll">
+            <a href="#about">
+                <span>Scroll</span>
+                <div class="scroll-line"></div>
+            </a>
+        </div>
+    </section>
+
+    <!-- About -->
+    <section class="about" id="about">
+        <div class="section-container">
+            <div class="about-grid">
+                <div class="about-text fade-in">
+                    <span class="section-label">Our Story</span>
+                    <h3>More Than a Round of Golf</h3>
+                    <p>Founded in December 2025, The Fairway Society was born from a simple idea: the golf course is the ultimate meeting ground. What started as a small group of friends sharing a love of the game has grown into a thriving community of professionals who understand that the best business conversations happen on the fairway.</p>
+                    <p>We bring together ambitious individuals from all walks of life, united by a passion for golf and a desire to build meaningful connections. Whether you're a seasoned player or just picking up the clubs, you'll find a welcoming community ready to tee off together.</p>
+                    <div class="about-stats">
+                        <div class="stat">
+                            <span class="stat-number">150+</span>
+                            <div class="stat-label">Members</div>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">48</span>
+                            <div class="stat-label">Events per Year</div>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">1</span>
+                            <div class="stat-label">Year Running</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image fade-in">
+                    <div class="about-image-main">
+                        <div class="about-image-content">
+                            <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1">
+                                <circle cx="50" cy="50" r="40"/>
+                                <line x1="30" y1="70" x2="50" y2="30" stroke-width="2"/>
+                                <line x1="70" y1="70" x2="50" y2="30" stroke-width="2"/>
+                                <circle cx="50" cy="28" r="3" fill="currentColor"/>
+                            </svg>
+                            <p>"The game of golf connects people in ways no boardroom ever could."</p>
+                        </div>
+                    </div>
+                    <div class="about-image-accent"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Join -->
+    <section class="features" id="why-join">
+        <div class="section-container">
+            <div class="section-header fade-in">
+                <span class="section-label">Why Join</span>
+                <h2 class="section-title">The Fairway Advantage</h2>
+                <div class="section-divider"></div>
+                <p class="section-subtitle">More than just golf. It's a community built on shared passion and mutual growth.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card fade-in">
+                    <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                    <h4>Network on the Green</h4>
+                    <p>Connect with professionals from diverse industries in a relaxed setting. Some of the best partnerships have been forged between the first tee and the 18th hole.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
+                    <h4>Regular Events</h4>
+                    <p>From weekly rounds to major tournaments, we host events throughout the year at premier courses. There's always a game to join and new people to meet.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5"/>
+                        <path d="M2 12l10 5 10-5"/>
+                    </svg>
+                    <h4>All Skill Levels</h4>
+                    <p>Whether you're a single-digit handicapper or just discovering the sport, our society welcomes players at every level. It's about the camaraderie, not the scorecard.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                        <circle cx="12" cy="10" r="3"/>
+                    </svg>
+                    <h4>Premier Courses</h4>
+                    <p>Enjoy access to a curated selection of top-tier courses. We negotiate group rates and exclusive tee times so you can play the best courses at the best value.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                    <h4>Social Events</h4>
+                    <p>Golf is just the beginning. From post-round dinners to annual galas, our social calendar keeps the connections growing well beyond the course.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M2 12h20"/>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                    </svg>
+                    <h4>Golf Trips</h4>
+                    <p>Join our members on curated golf getaways to iconic destinations. From domestic escapes to international tours, adventure awaits beyond your home course.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Events -->
+    <section class="events" id="events">
+        <div class="section-container">
+            <div class="section-header fade-in">
+                <span class="section-label">Upcoming</span>
+                <h2 class="section-title">Events Calendar</h2>
+                <div class="section-divider"></div>
+                <p class="section-subtitle">Join us for our upcoming rounds and social gatherings.</p>
+            </div>
+            <div class="events-list">
+                <div class="event-card fade-in">
+                    <div class="event-date">
+                        <div class="event-month">Apr</div>
+                        <div class="event-day">19</div>
+                        <div class="event-year">2026</div>
+                    </div>
+                    <div class="event-info">
+                        <h4>Autumn Classic Tournament</h4>
+                        <p>Our signature autumn event. 18-hole Stableford competition followed by presentation dinner and networking at the clubhouse.</p>
+                        <div class="event-location">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            Joondalup Resort &bull; Shotgun Start 7:30am
+                        </div>
+                    </div>
+                    <div class="event-action">
+                        <a href="#contact" class="btn btn-outline">Register</a>
+                    </div>
+                </div>
+                <div class="event-card fade-in">
+                    <div class="event-date">
+                        <div class="event-month">May</div>
+                        <div class="event-day">10</div>
+                        <div class="event-year">2026</div>
+                    </div>
+                    <div class="event-info">
+                        <h4>Monthly Members Round</h4>
+                        <p>Casual monthly round open to all members. Great opportunity for newcomers to meet the group in a relaxed setting.</p>
+                        <div class="event-location">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            The Vines Resort &bull; Tee Times from 8:00am
+                        </div>
+                    </div>
+                    <div class="event-action">
+                        <a href="#contact" class="btn btn-outline">Register</a>
+                    </div>
+                </div>
+                <div class="event-card fade-in">
+                    <div class="event-date">
+                        <div class="event-month">Jun</div>
+                        <div class="event-day">06</div>
+                        <div class="event-year">2026</div>
+                    </div>
+                    <div class="event-info">
+                        <h4>Networking Scramble & Dinner</h4>
+                        <p>Ambrose format teams with randomised groups. Perfect for making new connections. Includes post-round dinner and drinks.</p>
+                        <div class="event-location">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            Wembley Golf Course &bull; 1:00pm Shotgun
+                        </div>
+                    </div>
+                    <div class="event-action">
+                        <a href="#contact" class="btn btn-outline">Register</a>
+                    </div>
+                </div>
+                <div class="event-card fade-in">
+                    <div class="event-date">
+                        <div class="event-month">Jul</div>
+                        <div class="event-day">18</div>
+                        <div class="event-year">2026</div>
+                    </div>
+                    <div class="event-info">
+                        <h4>Winter Invitational</h4>
+                        <p>Bring a guest and introduce them to the society. Two-person best ball format. Great way to grow our community.</p>
+                        <div class="event-location">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            Royal Perth Golf Club &bull; 8:30am Start
+                        </div>
+                    </div>
+                    <div class="event-action">
+                        <a href="#contact" class="btn btn-outline">Register</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials" id="testimonials">
+        <div class="section-container">
+            <div class="section-header fade-in">
+                <span class="section-label">Testimonials</span>
+                <h2 class="section-title">What Our Members Say</h2>
+                <div class="section-divider"></div>
+            </div>
+            <div class="testimonial-grid">
+                <div class="testimonial-card fade-in">
+                    <div class="testimonial-quote">&ldquo;</div>
+                    <p>Joining The Fairway Society was one of the best decisions I've made. I've expanded my professional network tenfold and discovered some incredible courses I never would have played otherwise.</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">JM</div>
+                        <div>
+                            <div class="testimonial-name">James M.</div>
+                            <div class="testimonial-role">Member since 2018</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card fade-in">
+                    <div class="testimonial-quote">&ldquo;</div>
+                    <p>The mix of competitive golf and genuine networking is perfectly balanced. I've made lasting friendships and business connections that go well beyond the 19th hole.</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">SK</div>
+                        <div>
+                            <div class="testimonial-name">Sarah K.</div>
+                            <div class="testimonial-role">Member since 2020</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card fade-in">
+                    <div class="testimonial-quote">&ldquo;</div>
+                    <p>I was nervous about joining as a relative beginner, but the welcoming atmosphere put me at ease immediately. Six months in and my handicap has dropped 10 strokes.</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">DR</div>
+                        <div>
+                            <div class="testimonial-name">David R.</div>
+                            <div class="testimonial-role">Member since 2023</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card fade-in">
+                    <div class="testimonial-quote">&ldquo;</div>
+                    <p>The golf trips alone are worth the membership. Last year's trip was unforgettable. The organisation, the courses, and the company were all first class.</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">LP</div>
+                        <div>
+                            <div class="testimonial-name">Lisa P.</div>
+                            <div class="testimonial-role">Member since 2019</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Membership -->
+    <section class="membership" id="membership">
+        <div class="section-container">
+            <div class="section-header fade-in">
+                <span class="section-label">Membership</span>
+                <h2 class="section-title">Join the Society</h2>
+                <div class="section-divider"></div>
+                <p class="section-subtitle">Choose the membership tier that suits your lifestyle and commitment to the game.</p>
+            </div>
+            <div class="membership-grid">
+                <div class="membership-card fade-in">
+                    <div class="membership-tier">Social</div>
+                    <div class="membership-price">$199</div>
+                    <div class="membership-period">per year</div>
+                    <ul class="membership-features">
+                        <li>Monthly social rounds</li>
+                        <li>Networking events access</li>
+                        <li>Members-only communication</li>
+                        <li>Group course rates</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-outline">Get Started</a>
+                </div>
+                <div class="membership-card featured fade-in">
+                    <div class="membership-tier">Full Member</div>
+                    <div class="membership-price">$399</div>
+                    <div class="membership-period">per year</div>
+                    <ul class="membership-features">
+                        <li>All Social tier benefits</li>
+                        <li>Tournament entry included</li>
+                        <li>Priority golf trip booking</li>
+                        <li>Guest passes (2 per year)</li>
+                        <li>Handicap tracking</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-primary">Join Now</a>
+                </div>
+                <div class="membership-card fade-in">
+                    <div class="membership-tier">Platinum</div>
+                    <div class="membership-price">$699</div>
+                    <div class="membership-period">per year</div>
+                    <ul class="membership-features">
+                        <li>All Full Member benefits</li>
+                        <li>VIP event invitations</li>
+                        <li>Unlimited guest passes</li>
+                        <li>Golf trip discounts</li>
+                        <li>Exclusive partner perks</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-outline">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="contact" id="contact">
+        <div class="section-container">
+            <div class="section-header fade-in">
+                <span class="section-label">Get in Touch</span>
+                <h2 class="section-title">Ready to Tee Off?</h2>
+                <div class="section-divider"></div>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-info fade-in">
+                    <h3>We'd Love to Hear From You</h3>
+                    <p>Whether you're interested in membership, have questions about upcoming events, or just want to learn more about The Fairway Society, drop us a line. We'll get back to you before your next round.</p>
+                    <ul class="contact-details">
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                            hello@thefairwaysociety.com
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                            0400 000 000
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            Perth, Western Australia
+                        </li>
+                    </ul>
+                </div>
+                <form class="contact-form fade-in" onsubmit="handleSubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>First Name</label>
+                            <input type="text" required placeholder="John">
+                        </div>
+                        <div class="form-group">
+                            <label>Last Name</label>
+                            <input type="text" required placeholder="Smith">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" required placeholder="john@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Handicap (Approximate)</label>
+                        <select>
+                            <option value="">Select your handicap range</option>
+                            <option>Beginner (36+)</option>
+                            <option>High (28-36)</option>
+                            <option>Mid (15-27)</option>
+                            <option>Low (5-14)</option>
+                            <option>Scratch or better (0-4)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea placeholder="Tell us a bit about yourself and what you're looking for..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Enquiry</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sponsors -->
+    <section class="sponsors" id="sponsors">
+        <div class="section-container">
+            <div class="section-header fade-in">
+                <span class="section-label">Proudly Supported By</span>
+                <h2 class="section-title">Our Sponsors</h2>
+                <div class="section-divider"></div>
+                <p class="section-subtitle">We're grateful for the generous support of our partners who help make every round memorable.</p>
+            </div>
+            <div class="sponsors-grid fade-in">
+                <div class="sponsor-card">
+                    <div class="sponsor-name">Pear Pressure</div>
+                </div>
+                <div class="sponsor-card">
+                    <div class="sponsor-name">IGA</div>
+                </div>
+                <div class="sponsor-card">
+                    <div class="sponsor-name">Autolinx</div>
+                </div>
+                <div class="sponsor-card">
+                    <div class="sponsor-name">JDM Connect</div>
+                </div>
+                <div class="sponsor-card">
+                    <div class="sponsor-name">Roberto's on the Bennet</div>
+                </div>
+                <div class="sponsor-card">
+                    <div class="sponsor-name">Megabes</div>
+                </div>
+                <div class="sponsor-card">
+                    <div class="sponsor-name">The Cleaning Crowd</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <a href="#" class="nav-logo">The Fairway Society</a>
+                    <p>An exclusive golf networking society bringing together like-minded professionals on the fairway since 2025.</p>
+                </div>
+                <div class="footer-col">
+                    <h5>Navigate</h5>
+                    <ul>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#why-join">Why Join</a></li>
+                        <li><a href="#events">Events</a></li>
+                        <li><a href="#membership">Membership</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h5>Events</h5>
+                    <ul>
+                        <li><a href="#events">Calendar</a></li>
+                        <li><a href="#events">Tournaments</a></li>
+                        <li><a href="#events">Golf Trips</a></li>
+                        <li><a href="#events">Social Nights</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h5>Connect</h5>
+                    <ul>
+                        <li><a href="#contact">Contact Us</a></li>
+                        <li><a href="#contact">Join Now</a></li>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">Facebook</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 The Fairway Society. All rights reserved. ESTD MMXXV.</p>
+                <div class="footer-social">
+                    <a href="#" aria-label="Instagram">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                    </a>
+                    <a href="#" aria-label="Facebook">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                    </a>
+                    <a href="#" aria-label="LinkedIn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Navigation scroll effect
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 80);
+        });
+
+        // Mobile menu
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+            document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+        });
+
+        function closeMobile() {
+            hamburger.classList.remove('active');
+            mobileMenu.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Fade-in on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // Form submission
+        function handleSubmit(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.textContent = 'Sent!';
+            btn.style.background = 'var(--green-mid)';
+            btn.style.color = 'var(--cream)';
+            setTimeout(() => {
+                btn.textContent = 'Send Enquiry';
+                btn.style.background = '';
+                btn.style.color = '';
+                e.target.reset();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
