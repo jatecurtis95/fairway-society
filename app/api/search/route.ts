@@ -27,6 +27,9 @@ type Result = {
   distanceKm?: number;
   lat?: number;
   lng?: number;
+  suburb?: string;
+  state?: string;
+  imageUrl?: string;
   gameType: string;
   layout: string;
 };
@@ -80,6 +83,9 @@ export async function POST(req: Request) {
             distanceKm: c.distance_km,
             lat: c.lat,
             lng: c.lng,
+            suburb: c.suburb ?? undefined,
+            state: c.state ?? undefined,
+            imageUrl: c.image_url ?? undefined,
             gameType: s.gameType,
             layout: s.layout,
           }));

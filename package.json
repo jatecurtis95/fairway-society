@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "seed": "tsx scripts/seed-courses.ts scripts/courses.csv",
-    "seed:probe": "tsx scripts/probe-and-seed.ts"
+    "seed:probe": "tsx scripts/probe-and-seed.ts",
+    "enrich:photos": "tsx scripts/enrich-photos.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.103.0",

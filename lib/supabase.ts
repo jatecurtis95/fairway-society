@@ -11,6 +11,7 @@ type NearbyCourse = {
   lat: number;
   lng: number;
   distance_km: number;
+  image_url: string | null;
 };
 
 let cached: SupabaseClient | null = null;
@@ -34,13 +35,36 @@ export async function findNearbyCourses(
   radiusKm: number
 ): Promise<NearbyCourse[]> {
   const supabase = getSupabase();
-  const { data, error } = await supabase.rpc("nearby_courses", {
+
+  // Step 1: get nearby course IDs + distances via RPC
+  const { data: rpcData, error: rpcError } = await supabase.rpc("nearby_courses", {
     u_lat: lat,
     u_lng: lng,
     radius_km: radiusKm,
   });
-  if (error) throw new Error(`nearby_courses: ${error.message}`);
-  return (data ?? []) as NearbyCourse[];
+  if (rpcError) throw new Error(`nearby_courses: ${rpcError.message}`);
+  if (!rpcData || rpcData.length === 0) return [];
+
+  // Step 2: fetch image_url for those courses (not returned by RPC)
+  const ids = (rpcData as { id: string }[]).map((r) => r.id);
+  const { data: imageData, error: imageError } = await supabase
+    .from("courses")
+    .select("id, image_url")
+    .in("id", ids);
+
+  if (imageError) {
+    // Non-fatal — just proceed without images
+    console.warn("Could not fetch image_url:", imageError.message);
+  }
+
+  const imageMap = new Map<string, string | null>(
+    (imageData ?? []).map((r: { id: string; image_url: string | null }) => [r.id, r.image_url])
+  );
+
+  return (rpcData as Omit<NearbyCourse, "image_url">[]).map((course) => ({
+    ...course,
+    image_url: imageMap.get(course.id) ?? null,
+  }));
 }
 
 export type { NearbyCourse };

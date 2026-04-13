@@ -14,6 +14,9 @@ type TeeTime = {
   distanceKm?: number;
   lat?: number;
   lng?: number;
+  suburb?: string;
+  state?: string;
+  imageUrl?: string;
   gameType: string;
   layout: string;
 };
@@ -31,7 +34,6 @@ const DAYPARTS: { key: Daypart; label: string; range: string }[] = [
   { key: "twilight", label: "Twilight", range: "After 6pm" },
 ];
 
-// Parse "01:52pm" / "1:52 PM" / "13:45" into 0-23 hour.
 function parseHour(raw: string): number | null {
   const s = raw.trim().toLowerCase().replace(/\s+/g, "");
   const m = s.match(/^(\d{1,2}):(\d{2})\s*(am|pm)?$/);
@@ -62,16 +64,6 @@ function isHolesMatch(gameType: string, layout: string, f: HolesFilter): boolean
   return true;
 }
 
-function holesOf(gameType: string, layout: string): string | null {
-  const blob = `${gameType} ${layout}`.toLowerCase();
-  const has9 = /\b9\s*hole/.test(blob);
-  const has18 = /\b18\s*hole/.test(blob);
-  if (has9 && has18) return "9 & 18 holes";
-  if (has18) return "18 holes";
-  if (has9) return "9 holes";
-  return null;
-}
-
 function groupHolesLabel(times: TeeTime[]): string {
   let has9 = false;
   let has18 = false;
@@ -92,6 +84,9 @@ type CourseGroup = {
   distanceKm?: number;
   lat?: number;
   lng?: number;
+  suburb?: string;
+  state?: string;
+  imageUrl?: string;
   times: TeeTime[];
 };
 
@@ -105,6 +100,9 @@ function groupByCourse(results: TeeTime[]): CourseGroup[] {
         distanceKm: r.distanceKm,
         lat: r.lat,
         lng: r.lng,
+        suburb: r.suburb,
+        state: r.state,
+        imageUrl: r.imageUrl,
         times: [],
       };
       map.set(r.course, g);
@@ -248,6 +246,7 @@ export default function TeeTimesPage() {
     <>
       <SiteNav />
       <main className="page">
+
         {/* ===== HERO ===== */}
         <section className="section" style={{ paddingBottom: "2rem" }}>
           <div className="container">
@@ -262,10 +261,7 @@ export default function TeeTimesPage() {
             </div>
 
             {/* ===== SEARCH BAR ===== */}
-            <form
-              onSubmit={search}
-              className="search-bar"
-            >
+            <form onSubmit={search} className="search-bar">
               <div className="field">
                 <label>Date</label>
                 <input
@@ -335,7 +331,10 @@ export default function TeeTimesPage() {
           <section className="section" style={{ paddingTop: "1rem" }}>
             <div className="container">
               {state === "loading" && (
-                <p className="empty">Searching courses near you…</p>
+                <div className="loading-state">
+                  <div className="loading-spinner" />
+                  <p>Searching courses near you&hellip;</p>
+                </div>
               )}
 
               {state === "done" && results.length === 0 && (
@@ -346,6 +345,7 @@ export default function TeeTimesPage() {
 
               {results.length > 0 && (
                 <>
+                  {/* Filters + Sort toolbar */}
                   <div className="toolbar">
                     <div className="chip-row">
                       {DAYPARTS.map((d) => (
@@ -393,9 +393,10 @@ export default function TeeTimesPage() {
                     </div>
                   </div>
 
+                  {/* Results header */}
                   <div className="results-header">
                     <p className="result-count">
-                      {groups.length} course{groups.length === 1 ? "" : "s"} · {totalSlots} tee time
+                      {groups.length} course{groups.length === 1 ? "" : "s"} &middot; {totalSlots} tee time
                       {totalSlots === 1 ? "" : "s"} available
                     </p>
                     <div className="view-toggle">
@@ -412,6 +413,7 @@ export default function TeeTimesPage() {
                     </div>
                   </div>
 
+                  {/* Map view */}
                   {viewMode === "map" && groups.some((g) => g.lat && g.lng) && (
                     <CoursesMap
                       pins={groups
@@ -436,6 +438,7 @@ export default function TeeTimesPage() {
                     </p>
                   )}
 
+                  {/* Course cards */}
                   <div className="course-list">
                     {groups.map((g) => {
                       const isExpanded = expanded[g.course] ?? false;
@@ -443,56 +446,95 @@ export default function TeeTimesPage() {
                       const hidden = g.times.length - visible.length;
                       const key = slugify(g.course);
                       const isHighlighted = activeCourse === key;
+
                       return (
                         <article
                           key={g.course}
                           ref={(el) => { courseRefs.current[key] = el; }}
                           className={`course-card ${isHighlighted ? "course-card-active" : ""}`}
                         >
-                          <header className="course-head">
-                            <div>
-                              <h3 className="course-name">{g.course}</h3>
-                              <p className="course-meta">
-                                {typeof g.distanceKm === "number"
-                                  ? `${g.distanceKm.toFixed(1)} km away`
-                                  : "Distance unknown"}
-                                {" · "}
-                                {g.times.length} tee time
-                                {g.times.length === 1 ? "" : "s"}
-                              </p>
+                          {/* Course photo */}
+                          {g.imageUrl && (
+                            <div className="course-photo-wrap">
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img
+                                src={g.imageUrl}
+                                alt={`${g.course} golf course`}
+                                className="course-photo"
+                                loading="lazy"
+                              />
+                              <div className="course-photo-overlay" />
+                              <div className="course-photo-badge">
+                                {groupHolesLabel(g.times)}
+                              </div>
                             </div>
-                            <span className="course-badge">
-                              {groupHolesLabel(g.times)}
-                            </span>
-                          </header>
+                          )}
 
-                          <div className="pill-row">
-                            {visible.map((t, i) => (
-                              <a
-                                key={i}
-                                href={t.bookingUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="pill"
-                                title={`${t.playersAvailable} available · ${t.layout}`}
-                              >
-                                <span className="pill-time">{t.time}</span>
-                                <span className="pill-avail">
-                                  {t.playersAvailable} avail
+                          <div className="course-body">
+                            <header className="course-head">
+                              <div className="course-info">
+                                <h3 className="course-name">{g.course}</h3>
+                                <p className="course-meta">
+                                  {g.suburb && g.state
+                                    ? `${g.suburb}, ${g.state}`
+                                    : g.state ?? ""}
+                                  {(g.suburb || g.state) && typeof g.distanceKm === "number"
+                                    ? " · "
+                                    : ""}
+                                  {typeof g.distanceKm === "number"
+                                    ? `${g.distanceKm.toFixed(1)} km away`
+                                    : ""}
+                                  {" · "}
+                                  <span className="course-slot-count">
+                                    {g.times.length} tee time{g.times.length === 1 ? "" : "s"}
+                                  </span>
+                                </p>
+                              </div>
+                              {/* Only show badge here if there's no photo (photo has its own badge) */}
+                              {!g.imageUrl && (
+                                <span className="course-badge">
+                                  {groupHolesLabel(g.times)}
                                 </span>
-                              </a>
-                            ))}
-                            {hidden > 0 && (
-                              <button
-                                type="button"
-                                className="pill pill-more"
-                                onClick={() =>
-                                  setExpanded((e) => ({ ...e, [g.course]: true }))
-                                }
-                              >
-                                +{hidden} more
-                              </button>
-                            )}
+                              )}
+                            </header>
+
+                            <div className="pill-row">
+                              {visible.map((t, i) => (
+                                <a
+                                  key={i}
+                                  href={t.bookingUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="pill"
+                                  title={`${t.playersAvailable} available · ${t.layout}`}
+                                >
+                                  <span className="pill-time">{t.time}</span>
+                                  <span className="pill-avail">
+                                    {t.playersAvailable} avail
+                                  </span>
+                                </a>
+                              ))}
+                              {hidden > 0 && (
+                                <button
+                                  type="button"
+                                  className="pill pill-more"
+                                  onClick={() =>
+                                    setExpanded((e) => ({ ...e, [g.course]: true }))
+                                  }
+                                >
+                                  +{hidden} more
+                                </button>
+                              )}
+                            </div>
+
+                            <a
+                              href={g.times[0]?.courseUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="course-book-link"
+                            >
+                              Book at {g.course} &rarr;
+                            </a>
                           </div>
                         </article>
                       );
@@ -506,6 +548,7 @@ export default function TeeTimesPage() {
       </main>
 
       <style jsx>{`
+        /* ===== Search bar ===== */
         .search-bar {
           background: var(--white);
           border: 1px solid var(--border);
@@ -537,9 +580,7 @@ export default function TeeTimesPage() {
           letter-spacing: 1px;
           text-transform: uppercase;
         }
-        .location-hint strong {
-          color: var(--green-dark);
-        }
+        .location-hint strong { color: var(--green-dark); }
         .error-banner {
           margin-top: 1rem;
           padding: 1rem 1.25rem;
@@ -548,6 +589,27 @@ export default function TeeTimesPage() {
           color: #8a2a2a;
           font-size: 0.85rem;
         }
+
+        /* ===== Loading ===== */
+        .loading-state {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 1rem;
+          padding: 3rem 0;
+          color: var(--text-body);
+          font-size: 0.95rem;
+        }
+        .loading-spinner {
+          width: 36px;
+          height: 36px;
+          border: 3px solid var(--border);
+          border-top-color: var(--gold);
+          border-radius: 50%;
+          animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
         .empty {
           text-align: center;
           color: var(--text-body);
@@ -555,6 +617,8 @@ export default function TeeTimesPage() {
           font-size: 0.95rem;
           font-style: italic;
         }
+
+        /* ===== Toolbar ===== */
         .toolbar {
           display: flex;
           flex-wrap: wrap;
@@ -584,30 +648,15 @@ export default function TeeTimesPage() {
           cursor: pointer;
           transition: all 0.25s;
         }
-        .chip:hover {
-          border-color: var(--gold);
-          color: var(--gold);
-        }
+        .chip:hover { border-color: var(--gold); color: var(--gold); }
         .chip-active {
           background: var(--green-dark);
           color: var(--cream);
           border-color: var(--green-dark);
         }
-        .chip-active:hover {
-          background: var(--green-mid);
-          color: var(--cream);
-        }
-        .chip-divider {
-          width: 1px;
-          height: 20px;
-          background: var(--border);
-          margin: 0 0.25rem;
-        }
-        .sort-row {
-          display: flex;
-          gap: 0.25rem;
-          align-items: center;
-        }
+        .chip-active:hover { background: var(--green-mid); color: var(--cream); }
+        .chip-divider { width: 1px; height: 20px; background: var(--border); margin: 0 0.25rem; }
+        .sort-row { display: flex; gap: 0.25rem; align-items: center; }
         .sort-label {
           font-size: 0.7rem;
           letter-spacing: 2px;
@@ -627,13 +676,10 @@ export default function TeeTimesPage() {
           border-bottom: 2px solid transparent;
           transition: all 0.25s;
         }
-        .sort-btn:hover {
-          color: var(--green-dark);
-        }
-        .sort-btn-active {
-          color: var(--green-dark);
-          border-bottom-color: var(--gold);
-        }
+        .sort-btn:hover { color: var(--green-dark); }
+        .sort-btn-active { color: var(--green-dark); border-bottom-color: var(--gold); }
+
+        /* ===== Results header ===== */
         .results-header {
           display: flex;
           justify-content: space-between;
@@ -647,10 +693,7 @@ export default function TeeTimesPage() {
           letter-spacing: 1.5px;
           text-transform: uppercase;
         }
-        .view-toggle {
-          display: flex;
-          border: 1px solid var(--border);
-        }
+        .view-toggle { display: flex; border: 1px solid var(--border); }
         .view-btn {
           padding: 0.5rem 1.2rem;
           background: transparent;
@@ -664,32 +707,75 @@ export default function TeeTimesPage() {
           cursor: pointer;
           transition: all 0.2s;
         }
-        .view-btn:hover {
-          color: var(--green-dark);
+        .view-btn:hover { color: var(--green-dark); }
+        .view-btn-active { background: var(--green-dark); color: var(--cream); }
+
+        /* ===== Course list ===== */
+        .course-list {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
         }
-        .view-btn-active {
-          background: var(--green-dark);
-          color: var(--cream);
+
+        /* ===== Course card ===== */
+        .course-card {
+          background: var(--white);
+          border: 1px solid var(--border);
+          overflow: hidden;
+          transition: all 0.3s;
+        }
+        .course-card:hover {
+          border-color: var(--gold);
+          box-shadow: 0 8px 40px rgba(184, 150, 78, 0.15);
+          transform: translateY(-2px);
         }
         .course-card-active {
           border-color: var(--gold) !important;
           box-shadow: 0 8px 30px rgba(184, 150, 78, 0.25) !important;
         }
-        .course-list {
-          display: flex;
-          flex-direction: column;
-          gap: 1.25rem;
+
+        /* ===== Course photo ===== */
+        .course-photo-wrap {
+          position: relative;
+          width: 100%;
+          height: 200px;
+          overflow: hidden;
         }
-        .course-card {
-          background: var(--white);
-          border: 1px solid var(--border);
-          padding: 1.75rem 2rem;
-          transition: all 0.3s;
+        .course-photo {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
+          display: block;
+          transition: transform 0.5s ease;
         }
-        .course-card:hover {
-          border-color: var(--gold);
-          box-shadow: 0 8px 30px rgba(184, 150, 78, 0.1);
+        .course-card:hover .course-photo { transform: scale(1.03); }
+        .course-photo-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            to bottom,
+            transparent 40%,
+            rgba(27, 58, 45, 0.6) 100%
+          );
         }
+        .course-photo-badge {
+          position: absolute;
+          bottom: 1rem;
+          right: 1rem;
+          font-size: 0.65rem;
+          font-weight: 600;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          color: var(--gold);
+          border: 1px solid var(--gold);
+          padding: 0.35rem 0.75rem;
+          background: rgba(27, 58, 45, 0.75);
+          backdrop-filter: blur(4px);
+        }
+
+        /* ===== Course body ===== */
+        .course-body { padding: 1.5rem 2rem 1.75rem; }
         .course-head {
           display: flex;
           justify-content: space-between;
@@ -699,13 +785,14 @@ export default function TeeTimesPage() {
           padding-bottom: 1rem;
           border-bottom: 1px solid rgba(184, 150, 78, 0.15);
         }
+        .course-info { flex: 1; min-width: 0; }
         .course-name {
           font-family: "Cormorant Garamond", serif;
           font-size: 1.5rem;
           font-weight: 500;
           color: var(--green-dark);
           line-height: 1.2;
-          margin-bottom: 0.3rem;
+          margin-bottom: 0.35rem;
         }
         .course-meta {
           font-size: 0.75rem;
@@ -713,7 +800,9 @@ export default function TeeTimesPage() {
           letter-spacing: 1px;
           text-transform: uppercase;
         }
+        .course-slot-count { color: var(--green-mid); font-weight: 600; }
         .course-badge {
+          flex-shrink: 0;
           font-size: 0.65rem;
           font-weight: 600;
           letter-spacing: 2px;
@@ -723,11 +812,9 @@ export default function TeeTimesPage() {
           padding: 0.35rem 0.75rem;
           white-space: nowrap;
         }
-        .pill-row {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 0.5rem;
-        }
+
+        /* ===== Tee time pills ===== */
+        .pill-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.25rem; }
         .pill {
           display: flex;
           flex-direction: column;
@@ -747,9 +834,7 @@ export default function TeeTimesPage() {
           transform: translateY(-1px);
         }
         .pill:hover .pill-time,
-        .pill:hover .pill-avail {
-          color: var(--green-dark);
-        }
+        .pill:hover .pill-avail { color: var(--green-dark); }
         .pill-time {
           font-family: "Cormorant Garamond", serif;
           font-size: 1.1rem;
@@ -774,25 +859,32 @@ export default function TeeTimesPage() {
           color: var(--gold);
           background: transparent;
         }
-        .pill-more:hover {
-          background: var(--gold);
-          color: var(--green-dark);
+        .pill-more:hover { background: var(--gold); color: var(--green-dark); }
+
+        /* ===== Book link ===== */
+        .course-book-link {
+          display: inline-block;
+          font-size: 0.7rem;
+          font-weight: 600;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          color: var(--green-mid);
+          text-decoration: none;
+          border-bottom: 1px solid transparent;
+          transition: all 0.2s;
         }
+        .course-book-link:hover {
+          color: var(--gold);
+          border-bottom-color: var(--gold);
+        }
+
+        /* ===== Responsive ===== */
         @media (max-width: 700px) {
-          .search-bar {
-            position: static;
-            padding: 1.25rem;
-          }
-          .course-card {
-            padding: 1.25rem;
-          }
-          .course-head {
-            flex-direction: column;
-          }
-          .toolbar {
-            flex-direction: column;
-            align-items: flex-start;
-          }
+          .search-bar { position: static; padding: 1.25rem; }
+          .course-body { padding: 1.25rem; }
+          .course-head { flex-direction: column; }
+          .toolbar { flex-direction: column; align-items: flex-start; }
+          .course-photo-wrap { height: 160px; }
         }
       `}</style>
     </>
