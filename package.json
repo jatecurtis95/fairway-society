@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "seed": "tsx scripts/seed-courses.ts scripts/courses.csv"
+    "seed": "tsx scripts/seed-courses.ts scripts/courses.csv",
+    "seed:probe": "tsx scripts/probe-and-seed.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.103.0",
@@ -22,6 +23,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv": "^17.4.2",
     "tsx": "^4.21.0",
     "typescript": "^5"
   }

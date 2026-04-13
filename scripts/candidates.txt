@@ -1,0 +1,97 @@
+# AU golf clubs to probe as MiClub candidates.
+# Format: <club name>|<subdomain guess>|<state>|<suburb>
+# The probe script will try https://<subdomain>.miclub.com.au/guests/bookings/ViewPublicCalendar.msp?booking_resource_id=3000000
+# and only keep ones that actually respond.
+#
+# === WA ===
+Wembley Golf Course|wembley|WA|Wembley Downs
+Maylands Peninsula Public Golf Course|maylandsembleton|WA|Maylands
+Hartfield Country Club|hartfield|WA|Forrestfield
+The Vines Resort & Country Club|vines|WA|The Vines
+Joondalup Resort|joondalupresort|WA|Connolly
+Mount Lawley Golf Club|mountlawley|WA|Inglewood
+Royal Fremantle Golf Club|royalfremantle|WA|Fremantle
+Lake Karrinyup Country Club|lakekarrinyup|WA|Karrinyup
+Cottesloe Golf Club|cottesloe|WA|Swanbourne
+Mosman Park Golf Club|mosmanpark|WA|Mosman Park
+Melville Glades Golf Club|melvilleglades|WA|Brentwood
+Sun City Country Club|suncity|WA|Yanchep
+Fremantle Public Golf Course|fremantlepublic|WA|Fremantle
+Whaleback Golf Course|whaleback|WA|Parkwood
+Collier Park Golf Course|collierpark|WA|Como
+Gosnells Golf Club|gosnells|WA|Thornlie
+Mandurah Country Club|mandurahcc|WA|Mandurah
+Meadow Springs Country Club|meadowsprings|WA|Mandurah
+Secret Harbour Golf Links|secretharbour|WA|Secret Harbour
+Sea View Golf Club|seaview|WA|Cottesloe
+Hamersley Public Golf Course|hamersley|WA|Karrinyup
+Point Walter Golf Course|pointwalter|WA|Bicton
+Marangaroo Golf Course|marangaroo|WA|Marangaroo
+The Western Australian Golf Club|wagolfclub|WA|Yokine
+
+# === NSW ===
+The Australian Golf Club|australiangolf|NSW|Rosebery
+Royal Sydney Golf Club|royalsydney|NSW|Rose Bay
+The Lakes Golf Club|thelakes|NSW|Eastlakes
+Bonnie Doon Golf Club|bonniedoon|NSW|Pagewood
+Concord Golf Club|concord|NSW|Concord
+Manly Golf Club|manly|NSW|Balgowlah
+Long Reef Golf Club|longreef|NSW|Collaroy
+Pennant Hills Golf Club|pennanthills|NSW|Beecroft
+Avondale Golf Club|avondale|NSW|Pymble
+Killara Golf Club|killara|NSW|Killara
+Cromer Golf Club|cromer|NSW|Cromer
+Eastlake Golf Club|eastlake|NSW|Kingsford
+Moore Park Golf|moorepark|NSW|Moore Park
+Kogarah Golf Club|kogarah|NSW|Arncliffe
+Camden Golf Club|camden|NSW|Camden
+
+# === VIC ===
+Royal Melbourne Golf Club|royalmelbourne|VIC|Black Rock
+Kingston Heath Golf Club|kingstonheath|VIC|Cheltenham
+Victoria Golf Club|victoriagolf|VIC|Cheltenham
+Metropolitan Golf Club|metropolitan|VIC|Oakleigh South
+Yarra Yarra Golf Club|yarrayarra|VIC|Bentleigh East
+Commonwealth Golf Club|commonwealth|VIC|South Oakleigh
+Huntingdale Golf Club|huntingdale|VIC|Oakleigh South
+Peninsula Kingswood|peninsulakingswood|VIC|Frankston
+Sandhurst Club|sandhurst|VIC|Sandhurst
+Sorrento Golf Club|sorrento|VIC|Sorrento
+The National Golf Club|thenational|VIC|Cape Schanck
+Albert Park Golf Course|albertpark|VIC|Albert Park
+Yarra Bend Golf|yarrabend|VIC|Fairfield
+
+# === QLD ===
+Royal Queensland Golf Club|royalqueensland|QLD|Hamilton
+Brookwater Golf Club|brookwater|QLD|Brookwater
+Indooroopilly Golf Club|indooroopilly|QLD|Indooroopilly
+Victoria Park Golf|victoriapark|QLD|Herston
+Keperra Golf Club|keperra|QLD|Keperra
+Wynnum Golf Club|wynnum|QLD|Wynnum
+Pacific Golf Club|pacificgolf|QLD|Carindale
+Carbrook Golf Club|carbrook|QLD|Carbrook
+Sanctuary Cove|sanctuarycove|QLD|Hope Island
+Royal Pines Resort|royalpines|QLD|Benowa
+RACV Royal Pines|racvroyalpines|QLD|Benowa
+Lakelands Golf Club|lakelands|QLD|Merrimac
+Palm Meadows Golf Course|palmmeadows|QLD|Carrara
+
+# === SA ===
+Royal Adelaide Golf Club|royaladelaide|SA|Seaton
+Kooyonga Golf Club|kooyonga|SA|Lockleys
+Glenelg Golf Club|glenelg|SA|Novar Gardens
+Grange Golf Club|grange|SA|Grange
+The Vines Golf Club Reynella|vinesreynella|SA|Reynella
+North Adelaide Golf Course|northadelaide|SA|North Adelaide
+West Lakes Golf Club|westlakes|SA|West Lakes
+
+# === TAS ===
+Royal Hobart Golf Club|royalhobart|TAS|Seven Mile Beach
+Kingston Beach Golf Club|kingstonbeach|TAS|Kingston Beach
+Tasmania Golf Club|tasmaniagolf|TAS|Barilla Bay
+Launceston Golf Club|launceston|TAS|Kings Meadows
+
+# === ACT ===
+Royal Canberra Golf Club|royalcanberra|ACT|Yarralumla
+Federal Golf Club|federal|ACT|Red Hill
+Gold Creek Country Club|goldcreek|ACT|Nicholls
