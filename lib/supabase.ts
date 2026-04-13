@@ -8,6 +8,8 @@ type NearbyCourse = {
   booking_url: string;
   suburb: string | null;
   state: string | null;
+  lat: number;
+  lng: number;
   distance_km: number;
 };
 

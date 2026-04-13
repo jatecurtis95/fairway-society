@@ -52,9 +52,12 @@ create or replace function nearby_courses(
   booking_url text,
   suburb text,
   state text,
+  lat double precision,
+  lng double precision,
   distance_km double precision
 ) as $$
   select c.id, c.name, c.slug, c.platform, c.booking_url, c.suburb, c.state,
+    c.lat, c.lng,
     course_distance_km(c.lat, c.lng, u_lat, u_lng) as distance_km
   from courses c
   where c.active = true

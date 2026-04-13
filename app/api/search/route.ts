@@ -25,6 +25,10 @@ type Result = {
   playersAvailable: number;
   bookingUrl: string;
   distanceKm?: number;
+  lat?: number;
+  lng?: number;
+  gameType: string;
+  layout: string;
 };
 
 export async function POST(req: Request) {
@@ -74,6 +78,10 @@ export async function POST(req: Request) {
             playersAvailable: s.availableSpots,
             bookingUrl: s.bookingUrl,
             distanceKm: c.distance_km,
+            lat: c.lat,
+            lng: c.lng,
+            gameType: s.gameType,
+            layout: s.layout,
           }));
       } catch {
         return [] as Result[];
