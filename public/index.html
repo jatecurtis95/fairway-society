@@ -134,6 +134,26 @@
             color: var(--green-dark) !important;
         }
 
+        .nav-tee-times {
+            background: var(--gold) !important;
+            color: var(--green-dark) !important;
+            padding: 0.5rem 1.2rem !important;
+            font-size: 0.75rem !important;
+            letter-spacing: 2px !important;
+            font-weight: 600 !important;
+            transition: all 0.3s !important;
+        }
+
+        .nav-tee-times:hover {
+            background: var(--gold-light) !important;
+            color: var(--green-dark) !important;
+            transform: translateY(-1px);
+        }
+
+        .nav-tee-times::after {
+            display: none !important;
+        }
+
         .hamburger {
             display: none;
             flex-direction: column;
@@ -179,9 +199,8 @@
             position: absolute;
             inset: 0;
             background:
-                linear-gradient(135deg, rgba(27, 58, 45, 0.95) 0%, rgba(27, 58, 45, 0.8) 50%, rgba(27, 58, 45, 0.95) 100%),
-                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="p" patternUnits="userSpaceOnUse" width="40" height="40"><path d="M0 20 Q10 15 20 20 Q30 25 40 20" stroke="rgba(184,150,78,0.06)" fill="none" stroke-width="0.5"/></pattern></defs><rect fill="url(%23p)" width="100" height="100"/></svg>');
-            background-size: cover, 200px 200px;
+                linear-gradient(135deg, rgba(27, 58, 45, 0.82) 0%, rgba(27, 58, 45, 0.65) 50%, rgba(27, 58, 45, 0.82) 100%),
+                url('/hero-golf.jpg') center center / cover no-repeat;
         }
 
         .hero-content {
@@ -1038,6 +1057,68 @@
             height: 16px;
         }
 
+        /* ===== TEE TIMES CALLOUT ===== */
+        .tee-times-callout {
+            background: var(--green-dark);
+            padding: 5rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tee-times-callout::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('/hero-golf.jpg') center 60% / cover no-repeat;
+            opacity: 0.12;
+        }
+
+        .tee-times-callout-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tee-times-callout-text h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            font-weight: 400;
+            color: var(--cream);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .tee-times-callout-text p {
+            font-size: 0.95rem;
+            color: rgba(245, 240, 230, 0.7);
+            line-height: 1.8;
+            font-weight: 300;
+            max-width: 560px;
+        }
+
+        .tee-times-callout-btn {
+            flex-shrink: 0;
+            white-space: nowrap;
+            font-size: 0.8rem;
+            padding: 1.1rem 2.8rem;
+            letter-spacing: 3px;
+        }
+
+        @media (max-width: 768px) {
+            .tee-times-callout-inner {
+                flex-direction: column;
+                text-align: center;
+            }
+            .tee-times-callout-text p {
+                max-width: 100%;
+            }
+        }
+
         /* ===== ANIMATIONS ===== */
         .fade-in {
             opacity: 0;
@@ -1187,9 +1268,9 @@
                 <li><a href="#about">About</a></li>
                 <li><a href="#why-join">Why Join</a></li>
                 <li><a href="#events">Events</a></li>
-                <li><a href="/tee-times">Find Tee Times</a></li>
                 <li><a href="#membership">Membership</a></li>
                 <li><a href="#contact">Contact</a></li>
+                <li><a href="/tee-times" class="nav-tee-times">Find Tee Times</a></li>
                 <li><a href="#contact" class="nav-cta">Join Now</a></li>
             </ul>
             <button class="hamburger" id="hamburger" aria-label="Menu">
@@ -1206,9 +1287,9 @@
             <li><a href="#about" onclick="closeMobile()">About</a></li>
             <li><a href="#why-join" onclick="closeMobile()">Why Join</a></li>
             <li><a href="#events" onclick="closeMobile()">Events</a></li>
-            <li><a href="/tee-times">Find Tee Times</a></li>
             <li><a href="#membership" onclick="closeMobile()">Membership</a></li>
             <li><a href="#contact" onclick="closeMobile()">Contact</a></li>
+            <li><a href="/tee-times" style="color: var(--gold)">Find Tee Times</a></li>
             <li><a href="#contact" onclick="closeMobile()" style="color: var(--gold)">Join Now</a></li>
         </ul>
     </div>
@@ -1428,6 +1509,18 @@
         </div>
     </section>
 
+    <!-- Find Tee Times Callout -->
+    <section class="tee-times-callout" id="tee-times-callout">
+        <div class="tee-times-callout-inner fade-in">
+            <div class="tee-times-callout-text">
+                <span class="section-label" style="color: var(--gold-light);">New Feature</span>
+                <h2>Book Your Next Round in Seconds</h2>
+                <p>Our live tee-time finder searches across MiClub courses throughout Australia. Enter your postcode and date — we'll show you every available slot, right now.</p>
+            </div>
+            <a href="/tee-times" class="btn btn-primary tee-times-callout-btn">Find Tee Times</a>
+        </div>
+    </section>
+
     <!-- Testimonials -->
     <section class="testimonials" id="testimonials">
         <div class="section-container">
@@ -1444,7 +1537,7 @@
                         <div class="testimonial-avatar">JM</div>
                         <div>
                             <div class="testimonial-name">James M.</div>
-                            <div class="testimonial-role">Member since 2018</div>
+                            <div class="testimonial-role">Member since January 2026</div>
                         </div>
                     </div>
                 </div>
@@ -1455,7 +1548,7 @@
                         <div class="testimonial-avatar">SK</div>
                         <div>
                             <div class="testimonial-name">Sarah K.</div>
-                            <div class="testimonial-role">Member since 2020</div>
+                            <div class="testimonial-role">Member since February 2026</div>
                         </div>
                     </div>
                 </div>
@@ -1466,7 +1559,7 @@
                         <div class="testimonial-avatar">DR</div>
                         <div>
                             <div class="testimonial-name">David R.</div>
-                            <div class="testimonial-role">Member since 2023</div>
+                            <div class="testimonial-role">Member since March 2026</div>
                         </div>
                     </div>
                 </div>
@@ -1477,7 +1570,7 @@
                         <div class="testimonial-avatar">LP</div>
                         <div>
                             <div class="testimonial-name">Lisa P.</div>
-                            <div class="testimonial-role">Member since 2019</div>
+                            <div class="testimonial-role">Member since December 2025</div>
                         </div>
                     </div>
                 </div>

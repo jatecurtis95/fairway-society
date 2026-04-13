@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const NAV_LINKS = [
   { href: "/#about",      label: "About" },
-  { href: "/#features",   label: "Why Join" },
+  { href: "/#why-join",   label: "Why Join" },
   { href: "/#events",     label: "Events" },
   { href: "/tee-times",   label: "Find Tee Times" },
   { href: "/#membership", label: "Membership" },
