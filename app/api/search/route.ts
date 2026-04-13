@@ -89,13 +89,34 @@ export async function POST(req: Request) {
     })
   );
 
-  const results = perCourse
-    .flat()
-    .sort((a, b) => {
-      const d = (a.distanceKm ?? 0) - (b.distanceKm ?? 0);
-      if (d !== 0) return d;
-      return a.time.localeCompare(b.time);
-    });
+  // Dedupe (course, time) — MiClub returns the same slot under multiple game types
+  // (18 Hole, 9 Hole, Twilight, etc.). Keep the one with the highest availability,
+  // and concatenate layouts so the UI can still surface them.
+  const merged = new Map<string, Result>();
+  for (const r of perCourse.flat()) {
+    const key = `${r.course}|${r.time}`;
+    const existing = merged.get(key);
+    if (!existing) {
+      merged.set(key, r);
+      continue;
+    }
+    if (r.playersAvailable > existing.playersAvailable) {
+      merged.set(key, {
+        ...r,
+        layout: `${existing.layout} / ${r.layout}`,
+        gameType: `${existing.gameType} / ${r.gameType}`,
+      });
+    } else {
+      existing.layout = `${existing.layout} / ${r.layout}`;
+      existing.gameType = `${existing.gameType} / ${r.gameType}`;
+    }
+  }
+
+  const results = [...merged.values()].sort((a, b) => {
+    const d = (a.distanceKm ?? 0) - (b.distanceKm ?? 0);
+    if (d !== 0) return d;
+    return a.time.localeCompare(b.time);
+  });
 
   return NextResponse.json({ results });
 }

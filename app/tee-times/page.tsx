@@ -64,9 +64,27 @@ function isHolesMatch(gameType: string, layout: string, f: HolesFilter): boolean
 
 function holesOf(gameType: string, layout: string): string | null {
   const blob = `${gameType} ${layout}`.toLowerCase();
-  if (/\b9\s*hole/.test(blob)) return "9 holes";
-  if (/\b18\s*hole/.test(blob)) return "18 holes";
+  const has9 = /\b9\s*hole/.test(blob);
+  const has18 = /\b18\s*hole/.test(blob);
+  if (has9 && has18) return "9 & 18 holes";
+  if (has18) return "18 holes";
+  if (has9) return "9 holes";
   return null;
+}
+
+function groupHolesLabel(times: TeeTime[]): string {
+  let has9 = false;
+  let has18 = false;
+  for (const t of times) {
+    const blob = `${t.gameType} ${t.layout}`.toLowerCase();
+    if (/\b9\s*hole/.test(blob)) has9 = true;
+    if (/\b18\s*hole/.test(blob)) has18 = true;
+    if (has9 && has18) break;
+  }
+  if (has9 && has18) return "9 & 18 holes";
+  if (has18) return "18 holes";
+  if (has9) return "9 holes";
+  return "Mixed";
 }
 
 type CourseGroup = {
@@ -444,7 +462,7 @@ export default function TeeTimesPage() {
                               </p>
                             </div>
                             <span className="course-badge">
-                              {holesOf(g.times[0].gameType, g.times[0].layout) ?? "Mixed"}
+                              {groupHolesLabel(g.times)}
                             </span>
                           </header>
 
