@@ -771,26 +771,26 @@ export default function TeeTimesPage() {
       <style jsx>{`
         /* ── Layout ─────────────────────────────────────────────────────────── */
         .hero-section {
-          padding: 4rem 0 2rem;
+          padding: 2.5rem 0 0;
           background: var(--cream-light, #f5f2eb);
         }
-        .hero-text { text-align: center; margin-bottom: 2.5rem; }
+        .hero-text { text-align: center; margin-bottom: 1.5rem; }
         .hero-title {
           font-family: "Cormorant Garamond", serif;
-          font-size: clamp(2.2rem, 5vw, 3.5rem);
+          font-size: clamp(1.9rem, 5vw, 3.2rem);
           font-weight: 500;
           color: var(--green-dark);
           line-height: 1.15;
-          margin: 0.5rem 0 1rem;
+          margin: 0.4rem 0 0.75rem;
         }
         .hero-sub {
-          font-size: 0.95rem;
+          font-size: 0.88rem;
           color: var(--text-body);
-          max-width: 480px;
+          max-width: 440px;
           margin: 0 auto;
-          line-height: 1.7;
+          line-height: 1.65;
         }
-        .results-section { padding: 2rem 0 4rem; }
+        .results-section { padding: 1.5rem 0 4rem; }
 
         /* ── Search card ─────────────────────────────────────────────────────── */
         .search-card {
@@ -910,23 +910,24 @@ export default function TeeTimesPage() {
           align-items: center;
           justify-content: center;
           gap: 0.5rem;
-          background: var(--green-dark);
-          color: var(--cream);
+          background: var(--gold);
+          color: var(--green-dark);
           border: none;
           padding: 0 2rem;
           font-family: "Montserrat", sans-serif;
           font-size: 0.75rem;
-          font-weight: 600;
+          font-weight: 700;
           letter-spacing: 2px;
           text-transform: uppercase;
           cursor: pointer;
-          transition: background 0.2s;
+          transition: background 0.2s, transform 0.15s;
           min-height: 64px;
-          min-width: 120px;
+          min-width: 130px;
           flex-shrink: 0;
         }
-        .search-btn:hover:not(:disabled) { background: var(--green-mid, #2d5a3d); }
-        .search-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .search-btn:hover:not(:disabled) { background: var(--gold-light, #d4b06a); transform: translateY(-1px); }
+        .search-btn:active:not(:disabled) { transform: translateY(0); }
+        .search-btn:disabled { opacity: 0.55; cursor: not-allowed; }
         .btn-spinner {
           width: 18px;
           height: 18px;
@@ -1393,25 +1394,26 @@ export default function TeeTimesPage() {
 
         /* ── Mobile responsive ───────────────────────────────────────────────── */
         @media (max-width: 768px) {
-          .hero-section { padding: 2rem 0 1.5rem; }
-          .hero-title { font-size: 2rem; }
+          .hero-section { padding: 1.5rem 0 0; }
+          .hero-title { font-size: 1.75rem; }
+          .hero-text { margin-bottom: 1rem; }
 
           .search-card { position: static; border-radius: 0; border-left: none; border-right: none; }
           .search-row { flex-direction: column; }
           .field-sep { display: none; }
-          .search-field { padding: 0.875rem 1rem; border-bottom: 1px solid var(--border); }
+          .search-field { padding: 0.7rem 1rem; border-bottom: 1px solid var(--border); }
           .search-field:last-of-type { border-bottom: none; }
           .search-field-sm { min-width: unset; }
           .search-field-location { min-width: unset; }
           .search-btn {
             width: 100%;
-            min-height: 52px;
+            min-height: 50px;
             border-radius: 0;
             padding: 1rem;
           }
 
-          .stats-bar { padding: 0.75rem 0; }
-          .stat-value { font-size: 1.2rem; }
+          .stats-bar { padding: 0.6rem 0; }
+          .stat-value { font-size: 1.1rem; }
 
           .filter-toggle-btn { display: flex; }
           .filter-chips { display: none; }
