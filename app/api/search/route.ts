@@ -47,18 +47,29 @@ export async function POST(req: Request) {
   let { lat, lng } = body;
   let courses: Awaited<ReturnType<typeof findNearbyCourses>>;
 
+  // Resolve postcode → coords if needed (used by both nearby + random with location)
+  if ((lat === undefined || lng === undefined) && body.postcode) {
+    const resolved = await resolveAuPostcode(body.postcode);
+    if (resolved) {
+      lat = resolved.lat;
+      lng = resolved.lng;
+    }
+  }
+
   if (body.random) {
-    courses = await findRandomCourses(12);
+    if (lat !== undefined && lng !== undefined) {
+      // Random within the user's radius — shuffle nearby courses and take 12
+      const nearby = await findNearbyCourses(lat, lng, body.radiusKm);
+      if (!nearby.length) {
+        return NextResponse.json({ results: [], error: `No courses found within ${body.radiusKm}km. Try widening the radius.` });
+      }
+      courses = [...nearby].sort(() => Math.random() - 0.5).slice(0, 12);
+    } else {
+      courses = await findRandomCourses(12);
+    }
   } else if (body.courseQuery) {
     courses = await findCoursesByName(body.courseQuery);
   } else {
-    if ((lat === undefined || lng === undefined) && body.postcode) {
-      const resolved = await resolveAuPostcode(body.postcode);
-      if (resolved) {
-        lat = resolved.lat;
-        lng = resolved.lng;
-      }
-    }
     if (lat === undefined || lng === undefined) {
       return NextResponse.json(
         { error: "Location required. Use 'Use My Location', enter a postcode, or search by course name." },

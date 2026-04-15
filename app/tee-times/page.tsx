@@ -437,7 +437,7 @@ export default function TeeTimesPage() {
                   className="surprise-btn"
                   disabled={isSearching}
                   title={`Pick a random course with availability for ${players} player${players > 1 ? "s" : ""}`}
-                  onClick={() => doSearch(null, date, players, radiusKm, "", "", true)}
+                  onClick={() => doSearch(coords, date, players, radiusKm, postcode, "", true)}
                 >
                   <span aria-hidden>🎲</span>
                   <span>Surprise me</span>
