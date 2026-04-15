@@ -7,8 +7,8 @@
 Wembley Golf Course|wembley|WA|Wembley Downs
 Maylands Peninsula Public Golf Course|maylandsembleton|WA|Maylands
 Hartfield Country Club|hartfield|WA|Forrestfield
-The Vines Resort & Country Club|vines|WA|The Vines
-Joondalup Resort|joondalupresort|WA|Connolly
+The Vines Resort & Country Club|thevines|WA|The Vines
+Joondalup Resort|joondalup|WA|Connolly
 Mount Lawley Golf Club|mountlawley|WA|Inglewood
 Royal Fremantle Golf Club|royalfremantle|WA|Fremantle
 Lake Karrinyup Country Club|lakekarrinyup|WA|Karrinyup
