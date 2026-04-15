@@ -29,6 +29,21 @@ export function getSupabase(): SupabaseClient {
   return cached;
 }
 
+export async function findCoursesByName(query: string): Promise<NearbyCourse[]> {
+  const supabase = getSupabase();
+  const { data, error } = await supabase
+    .from("courses")
+    .select("id, name, slug, platform, booking_url, suburb, state, lat, lng")
+    .eq("active", true)
+    .ilike("name", `%${query}%`)
+    .limit(15);
+  if (error) throw new Error(`findCoursesByName: ${error.message}`);
+  return ((data ?? []) as Omit<NearbyCourse, "distance_km">[]).map((c) => ({
+    ...c,
+    distance_km: 0,
+  }));
+}
+
 export async function findNearbyCourses(
   lat: number,
   lng: number,

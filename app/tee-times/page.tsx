@@ -131,6 +131,7 @@ export default function TeeTimesPage() {
   const [players, setPlayers] = useState(2);
   const [radiusKm, setRadiusKm] = useState(50);
   const [postcode, setPostcode] = useState("");
+  const [courseQuery, setCourseQuery] = useState("");
 
   const [daypart, setDaypart] = useState<Daypart>("all");
   const [holes, setHoles] = useState<HolesFilter>("all");
@@ -157,6 +158,7 @@ export default function TeeTimesPage() {
     searchPlayers: number,
     searchRadius: number,
     searchPostcode: string,
+    searchCourseQuery: string = "",
   ) => {
     setState("loading");
     setError(null);
@@ -170,6 +172,7 @@ export default function TeeTimesPage() {
         lat: searchCoords?.lat,
         lng: searchCoords?.lng,
         postcode: searchPostcode || undefined,
+        courseQuery: searchCourseQuery.trim() || undefined,
       };
       const res = await fetch("/api/search", {
         method: "POST",
@@ -233,7 +236,7 @@ export default function TeeTimesPage() {
   // ── Manual search (form submit) ────────────────────────────────────────────
   function handleSearch(e?: React.FormEvent) {
     e?.preventDefault();
-    doSearch(coords, date, players, radiusKm, postcode);
+    doSearch(coords, date, players, radiusKm, postcode, courseQuery);
   }
 
   // ── Re-search when date or players change (after first search) ─────────────
@@ -243,7 +246,7 @@ export default function TeeTimesPage() {
     if (!hasAutoSearched.current) return;
     if (state === "loading") return;
     const timer = setTimeout(() => {
-      doSearch(coords, date, players, radiusKm, postcode);
+      doSearch(coords, date, players, radiusKm, postcode, courseQuery);
     }, 400);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -266,7 +269,7 @@ export default function TeeTimesPage() {
         setLocationDenied(false);
         localStorage.setItem("fs_coords", JSON.stringify({ ...c, label: "Current location" }));
         setState("idle");
-        doSearch(c, date, players, radiusKm, postcode);
+        doSearch(c, date, players, radiusKm, postcode, courseQuery);
       },
       (err) => {
         setState("error");
@@ -396,11 +399,25 @@ export default function TeeTimesPage() {
                   )}
                 </div>
 
+                <div className="field-sep" />
+
+                {/* Course name */}
+                <div className="search-field">
+                  <label className="field-label">Course name</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Joondalup"
+                    value={courseQuery}
+                    className="field-input"
+                    onChange={(e) => setCourseQuery(e.target.value)}
+                  />
+                </div>
+
                 {/* Search button */}
                 <button
                   type="submit"
                   className="search-btn"
-                  disabled={isSearching || (!coords && !postcode)}
+                  disabled={isSearching || (!coords && !postcode && !courseQuery.trim())}
                 >
                   {isSearching ? (
                     <span className="btn-spinner" />

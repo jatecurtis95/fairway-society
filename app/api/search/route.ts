@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { findNearbyCourses } from "@/lib/supabase";
+import { findNearbyCourses, findCoursesByName } from "@/lib/supabase";
 import { resolveAuPostcode } from "@/lib/postcode";
 import { scrapeMiClub } from "@/lib/scrapers/miclub";
 
@@ -15,6 +15,7 @@ const BodySchema = z.object({
   lat: z.number().optional(),
   lng: z.number().optional(),
   postcode: z.string().optional(),
+  courseQuery: z.string().trim().min(2).optional(),
 });
 
 type Result = {
@@ -43,21 +44,26 @@ export async function POST(req: Request) {
   }
 
   let { lat, lng } = body;
-  if ((lat === undefined || lng === undefined) && body.postcode) {
-    const resolved = await resolveAuPostcode(body.postcode);
-    if (resolved) {
-      lat = resolved.lat;
-      lng = resolved.lng;
-    }
-  }
-  if (lat === undefined || lng === undefined) {
-    return NextResponse.json(
-      { error: "Location required. Use 'Use My Location' or enter a postcode." },
-      { status: 400 }
-    );
-  }
+  let courses: Awaited<ReturnType<typeof findNearbyCourses>>;
 
-  const courses = await findNearbyCourses(lat, lng, body.radiusKm);
+  if (body.courseQuery) {
+    courses = await findCoursesByName(body.courseQuery);
+  } else {
+    if ((lat === undefined || lng === undefined) && body.postcode) {
+      const resolved = await resolveAuPostcode(body.postcode);
+      if (resolved) {
+        lat = resolved.lat;
+        lng = resolved.lng;
+      }
+    }
+    if (lat === undefined || lng === undefined) {
+      return NextResponse.json(
+        { error: "Location required. Use 'Use My Location', enter a postcode, or search by course name." },
+        { status: 400 }
+      );
+    }
+    courses = await findNearbyCourses(lat, lng, body.radiusKm);
+  }
   if (!courses.length) {
     return NextResponse.json({ results: [] });
   }
