@@ -83,7 +83,7 @@ export async function POST(req: Request) {
   }
 
   // Cap concurrent scrapes so we don't hammer the target hosts or blow the timeout.
-  const maxCourses = 15;
+  const maxCourses = 25;
   const target = courses.slice(0, maxCourses);
 
   const perCourse = await Promise.all(
