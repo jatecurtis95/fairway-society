@@ -1,14 +1,17 @@
 # AU golf clubs to probe as MiClub candidates.
-# Format: <club name>|<subdomain guess>|<state>|<suburb>
-# The probe script will try https://<subdomain>.miclub.com.au/guests/bookings/ViewPublicCalendar.msp?booking_resource_id=3000000
-# and only keep ones that actually respond.
+# Format: <club name>|<subdomain>|<state>|<suburb>[|<bookingResourceId>]
+# - bookingResourceId defaults to 3000000 if omitted
+# - Some courses use a non-default ID (e.g. Joondalup=3900000, The Vines=3000010)
+# - Check by visiting https://<subdomain>.miclub.com.au/guests/bookings/ViewPublicCalendar.msp
+#   and grepping for "bookingResourceId=" in the page source
+# The probe keeps only candidates whose calendar produces a clickable timesheet link.
 #
 # === WA ===
 Wembley Golf Course|wembley|WA|Wembley Downs
 Maylands Peninsula Public Golf Course|maylandsembleton|WA|Maylands
 Hartfield Country Club|hartfield|WA|Forrestfield
-The Vines Resort & Country Club|thevines|WA|The Vines
-Joondalup Resort|joondalup|WA|Connolly
+The Vines Resort & Country Club|thevines|WA|The Vines|3000010
+Joondalup Resort|joondalup|WA|Connolly|3900000
 Mount Lawley Golf Club|mountlawley|WA|Inglewood
 Royal Fremantle Golf Club|royalfremantle|WA|Fremantle
 Lake Karrinyup Country Club|lakekarrinyup|WA|Karrinyup

@@ -18,7 +18,7 @@ import { config as loadEnv } from "dotenv";
 
 loadEnv({ path: ".env.local" });
 
-type Candidate = { name: string; subdomain: string; state: string; suburb: string };
+type Candidate = { name: string; subdomain: string; state: string; suburb: string; resourceId: string };
 
 const UA = "TheFairwaySociety/1.0 (contact@thefairwaysociety.com.au)";
 const NOMINATIM_DELAY_MS = 1100; // be polite — 1 req/sec policy
@@ -30,11 +30,11 @@ function parseCandidates(path: string): Candidate[] {
     .map((l) => l.trim())
     .filter((l) => l && !l.startsWith("#"))
     .map((line) => {
-      const [name, subdomain, state, suburb] = line.split("|").map((s) => s.trim());
+      const [name, subdomain, state, suburb, resourceId] = line.split("|").map((s) => s.trim());
       if (!name || !subdomain || !state || !suburb) {
         throw new Error(`Bad candidate line: ${line}`);
       }
-      return { name, subdomain, state, suburb };
+      return { name, subdomain, state, suburb, resourceId: resourceId || "3000000" };
     });
 }
 
@@ -42,8 +42,8 @@ function slugify(s: string): string {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
 
-async function probeUrl(subdomain: string): Promise<string | null> {
-  const url = `https://${subdomain}.miclub.com.au/guests/bookings/ViewPublicCalendar.msp?booking_resource_id=3000000`;
+async function probeUrl(subdomain: string, resourceId: string): Promise<string | null> {
+  const url = `https://${subdomain}.miclub.com.au/guests/bookings/ViewPublicCalendar.msp?booking_resource_id=${resourceId}`;
   try {
     const res = await fetch(url, {
       method: "GET",
@@ -53,11 +53,9 @@ async function probeUrl(subdomain: string): Promise<string | null> {
     });
     if (!res.ok) return null;
     const text = await res.text();
-    // MiClub booking pages reliably contain these markers.
-    if (text.includes("feeGroupRow") || text.includes("redirectToTimesheet")) {
-      return res.url; // final URL after any redirects
-    }
-    return null;
+    // Require an actual clickable timesheet link, not just the calendar shell.
+    if (!/redirectToTimesheet\(/.test(text)) return null;
+    return url;
   } catch {
     return null;
   }
@@ -127,7 +125,7 @@ async function main() {
     const batch = candidates.slice(i, i + batchSize);
     const probed = await Promise.all(
       batch.map(async (c) => {
-        const verifiedUrl = await probeUrl(c.subdomain);
+        const verifiedUrl = await probeUrl(c.subdomain, c.resourceId);
         return { c, verifiedUrl };
       })
     );
