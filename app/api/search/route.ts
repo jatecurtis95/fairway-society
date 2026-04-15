@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { findNearbyCourses, findCoursesByName } from "@/lib/supabase";
+import { findNearbyCourses, findCoursesByName, findRandomCourses } from "@/lib/supabase";
 import { resolveAuPostcode } from "@/lib/postcode";
 import { scrapeMiClub } from "@/lib/scrapers/miclub";
 
@@ -16,6 +16,7 @@ const BodySchema = z.object({
   lng: z.number().optional(),
   postcode: z.string().optional(),
   courseQuery: z.string().trim().min(2).optional(),
+  random: z.boolean().optional(),
 });
 
 type Result = {
@@ -46,7 +47,9 @@ export async function POST(req: Request) {
   let { lat, lng } = body;
   let courses: Awaited<ReturnType<typeof findNearbyCourses>>;
 
-  if (body.courseQuery) {
+  if (body.random) {
+    courses = await findRandomCourses(12);
+  } else if (body.courseQuery) {
     courses = await findCoursesByName(body.courseQuery);
   } else {
     if ((lat === undefined || lng === undefined) && body.postcode) {
@@ -124,11 +127,17 @@ export async function POST(req: Request) {
     }
   }
 
-  const results = [...merged.values()].sort((a, b) => {
+  let results = [...merged.values()].sort((a, b) => {
     const d = (a.distanceKm ?? 0) - (b.distanceKm ?? 0);
     if (d !== 0) return d;
     return a.time.localeCompare(b.time);
   });
+
+  if (body.random && results.length) {
+    const coursesWithSlots = [...new Set(results.map((r) => r.course))];
+    const pick = coursesWithSlots[Math.floor(Math.random() * coursesWithSlots.length)];
+    results = results.filter((r) => r.course === pick);
+  }
 
   return NextResponse.json({ results });
 }

@@ -159,6 +159,7 @@ export default function TeeTimesPage() {
     searchRadius: number,
     searchPostcode: string,
     searchCourseQuery: string = "",
+    searchRandom: boolean = false,
   ) => {
     setState("loading");
     setError(null);
@@ -173,6 +174,7 @@ export default function TeeTimesPage() {
         lng: searchCoords?.lng,
         postcode: searchPostcode || undefined,
         courseQuery: searchCourseQuery.trim() || undefined,
+        random: searchRandom || undefined,
       };
       const res = await fetch("/api/search", {
         method: "POST",
@@ -427,6 +429,18 @@ export default function TeeTimesPage() {
                     </svg>
                   )}
                   <span>{isSearching ? (state === "locating" ? "Locating…" : "Searching…") : "Search"}</span>
+                </button>
+
+                {/* Surprise me button */}
+                <button
+                  type="button"
+                  className="surprise-btn"
+                  disabled={isSearching}
+                  title={`Pick a random course with availability for ${players} player${players > 1 ? "s" : ""}`}
+                  onClick={() => doSearch(null, date, players, radiusKm, "", "", true)}
+                >
+                  <span aria-hidden>🎲</span>
+                  <span>Surprise me</span>
                 </button>
               </div>
 
@@ -943,6 +957,28 @@ export default function TeeTimesPage() {
           flex-shrink: 0;
         }
         .search-btn:hover:not(:disabled) { background: var(--gold-light, #d4b06a); transform: translateY(-1px); }
+
+        .surprise-btn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          background: transparent;
+          color: var(--green-dark);
+          border: 1.5px solid var(--green-dark);
+          padding: 0 1.5rem;
+          font-family: "Montserrat", sans-serif;
+          font-size: 0.7rem;
+          font-weight: 700;
+          letter-spacing: 1.5px;
+          text-transform: uppercase;
+          cursor: pointer;
+          transition: background 0.2s, color 0.2s, transform 0.15s;
+          min-height: 64px;
+          flex-shrink: 0;
+        }
+        .surprise-btn:hover:not(:disabled) { background: var(--green-dark); color: var(--gold); transform: translateY(-1px); }
+        .surprise-btn:disabled { opacity: 0.55; cursor: not-allowed; }
         .search-btn:active:not(:disabled) { transform: translateY(0); }
         .search-btn:disabled { opacity: 0.55; cursor: not-allowed; }
         .btn-spinner {

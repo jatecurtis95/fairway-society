@@ -29,11 +29,24 @@ export function getSupabase(): SupabaseClient {
   return cached;
 }
 
+export async function findRandomCourses(count: number): Promise<NearbyCourse[]> {
+  const supabase = getSupabase();
+  const { data, error } = await supabase
+    .from("courses")
+    .select("id, name, slug, platform, booking_url, suburb, state, lat, lng, image_url")
+    .eq("active", true)
+    .eq("platform", "miclub");
+  if (error) throw new Error(`findRandomCourses: ${error.message}`);
+  const all = (data ?? []) as Omit<NearbyCourse, "distance_km">[];
+  const shuffled = [...all].sort(() => Math.random() - 0.5).slice(0, count);
+  return shuffled.map((c) => ({ ...c, distance_km: 0 }));
+}
+
 export async function findCoursesByName(query: string): Promise<NearbyCourse[]> {
   const supabase = getSupabase();
   const { data, error } = await supabase
     .from("courses")
-    .select("id, name, slug, platform, booking_url, suburb, state, lat, lng")
+    .select("id, name, slug, platform, booking_url, suburb, state, lat, lng, image_url")
     .eq("active", true)
     .ilike("name", `%${query}%`)
     .limit(15);
