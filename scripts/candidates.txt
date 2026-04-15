@@ -13,8 +13,8 @@ Mount Lawley Golf Club|mountlawley|WA|Inglewood
 Royal Fremantle Golf Club|royalfremantle|WA|Fremantle
 Lake Karrinyup Country Club|lakekarrinyup|WA|Karrinyup
 Cottesloe Golf Club|cottesloe|WA|Swanbourne
-Mosman Park Golf Club|mosmanpark|WA|Mosman Park
-Melville Glades Golf Club|melvilleglades|WA|Brentwood
+Mosman Park Golf Club|mosman|WA|Mosman Park
+Melville Glades Golf Club|melville|WA|Brentwood
 Sun City Country Club|suncity|WA|Yanchep
 Fremantle Public Golf Course|fremantlepublic|WA|Fremantle
 Whaleback Golf Course|whaleback|WA|Parkwood
@@ -30,7 +30,7 @@ Marangaroo Golf Course|marangaroo|WA|Marangaroo
 The Western Australian Golf Club|wagolfclub|WA|Yokine
 
 # === NSW ===
-The Australian Golf Club|australiangolf|NSW|Rosebery
+The Australian Golf Club|australian|NSW|Rosebery
 Royal Sydney Golf Club|royalsydney|NSW|Rose Bay
 The Lakes Golf Club|thelakes|NSW|Eastlakes
 Bonnie Doon Golf Club|bonniedoon|NSW|Pagewood
@@ -48,16 +48,16 @@ Camden Golf Club|camden|NSW|Camden
 
 # === VIC ===
 Royal Melbourne Golf Club|royalmelbourne|VIC|Black Rock
-Kingston Heath Golf Club|kingstonheath|VIC|Cheltenham
-Victoria Golf Club|victoriagolf|VIC|Cheltenham
+Kingston Heath Golf Club|kingston|VIC|Cheltenham
+Victoria Golf Club|victoria|VIC|Cheltenham
 Metropolitan Golf Club|metropolitan|VIC|Oakleigh South
-Yarra Yarra Golf Club|yarrayarra|VIC|Bentleigh East
+Yarra Yarra Golf Club|yarra|VIC|Bentleigh East
 Commonwealth Golf Club|commonwealth|VIC|South Oakleigh
 Huntingdale Golf Club|huntingdale|VIC|Oakleigh South
-Peninsula Kingswood|peninsulakingswood|VIC|Frankston
+Peninsula Kingswood|peninsula|VIC|Frankston
 Sandhurst Club|sandhurst|VIC|Sandhurst
 Sorrento Golf Club|sorrento|VIC|Sorrento
-The National Golf Club|thenational|VIC|Cape Schanck
+The National Golf Club|national|VIC|Cape Schanck
 Albert Park Golf Course|albertpark|VIC|Albert Park
 Yarra Bend Golf|yarrabend|VIC|Fairfield
 
@@ -81,14 +81,14 @@ Royal Adelaide Golf Club|royaladelaide|SA|Seaton
 Kooyonga Golf Club|kooyonga|SA|Lockleys
 Glenelg Golf Club|glenelg|SA|Novar Gardens
 Grange Golf Club|grange|SA|Grange
-The Vines Golf Club Reynella|vinesreynella|SA|Reynella
+The Vines Golf Club Reynella|vinesgc|SA|Reynella
 North Adelaide Golf Course|northadelaide|SA|North Adelaide
 West Lakes Golf Club|westlakes|SA|West Lakes
 
 # === TAS ===
 Royal Hobart Golf Club|royalhobart|TAS|Seven Mile Beach
 Kingston Beach Golf Club|kingstonbeach|TAS|Kingston Beach
-Tasmania Golf Club|tasmaniagolf|TAS|Barilla Bay
+Tasmania Golf Club|tasmania|TAS|Barilla Bay
 Launceston Golf Club|launceston|TAS|Kings Meadows
 
 # === ACT ===
