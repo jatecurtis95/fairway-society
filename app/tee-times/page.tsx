@@ -810,7 +810,7 @@ export default function TeeTimesPage() {
                 <>
                   <div className="private-divider">
                     <span className="private-divider-line" />
-                    <span className="private-divider-label">Private &amp; Members-Only Courses</span>
+                    <span className="private-divider-label">No Online Tee Times Today</span>
                     <span className="private-divider-line" />
                   </div>
                   <div className="course-grid">
@@ -828,7 +828,7 @@ export default function TeeTimesPage() {
                                 loading="lazy"
                               />
                               <div className="course-photo-overlay course-photo-overlay-private" />
-                              <span className="course-photo-badge course-photo-badge-private">Private</span>
+                              <span className="course-photo-badge course-photo-badge-private">No Times</span>
                               {typeof pc.distanceKm === "number" && (
                                 <span className="course-photo-dist">
                                   <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
@@ -858,10 +858,10 @@ export default function TeeTimesPage() {
                                     .join(" · ")}
                                 </p>
                               </div>
-                              <span className="private-badge">Members Only</span>
+                              <span className="private-badge">No Availability</span>
                             </header>
                             <p className="private-note">
-                              No public tee times available today. Contact the club directly for guest bookings.
+                              No online tee times available for this date. Try another day or contact the club directly.
                             </p>
                             <a
                               href={pc.courseUrl}
