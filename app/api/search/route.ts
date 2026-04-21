@@ -35,6 +35,7 @@ type Result = {
   imageUrl?: string;
   gameType: string;
   layout: string;
+  price?: number;
 };
 
 export async function POST(req: Request) {
@@ -113,6 +114,7 @@ export async function POST(req: Request) {
             imageUrl: c.image_url ?? undefined,
             gameType: s.gameType,
             layout: s.layout,
+            price: s.price,
           }));
         if (matched.length > 0) coursesWithSlots.add(c.name);
         return matched;
@@ -133,15 +135,20 @@ export async function POST(req: Request) {
       merged.set(key, r);
       continue;
     }
+    // Keep lowest price across merged slots
+    const minPrice = [existing.price, r.price].filter((p): p is number => p !== undefined);
+    const bestPrice = minPrice.length > 0 ? Math.min(...minPrice) : undefined;
     if (r.playersAvailable > existing.playersAvailable) {
       merged.set(key, {
         ...r,
         layout: `${existing.layout} / ${r.layout}`,
         gameType: `${existing.gameType} / ${r.gameType}`,
+        price: bestPrice,
       });
     } else {
       existing.layout = `${existing.layout} / ${r.layout}`;
       existing.gameType = `${existing.gameType} / ${r.gameType}`;
+      existing.price = bestPrice;
     }
   }
 

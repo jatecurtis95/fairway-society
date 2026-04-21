@@ -21,6 +21,7 @@ type TeeTime = {
   imageUrl?: string;
   gameType: string;
   layout: string;
+  price?: number;
 };
 
 type PrivateCourse = {
@@ -102,6 +103,11 @@ function groupHolesLabel(times: TeeTime[]): string {
   if (has18) return "18 holes";
   if (has9)  return "9 holes";
   return "Mixed";
+}
+
+function groupMinPrice(times: TeeTime[]): number | null {
+  const prices = times.map((t) => t.price).filter((p): p is number => p !== undefined);
+  return prices.length > 0 ? Math.min(...prices) : null;
 }
 
 function groupByCourse(results: TeeTime[]): CourseGroup[] {
@@ -755,6 +761,14 @@ export default function TeeTimesPage() {
                                 {g.times.length}
                                 <span className="slot-badge-label"> slot{g.times.length !== 1 ? "s" : ""}</span>
                               </span>
+                              {(() => {
+                                const mp = groupMinPrice(g.times);
+                                return mp !== null ? (
+                                  <span className="price-badge">
+                                    from <span className="price-value">${mp}</span>
+                                  </span>
+                                ) : null;
+                              })()}
                               {!g.imageUrl && (
                                 <span className="holes-badge">{groupHolesLabel(g.times)}</span>
                               )}
@@ -773,7 +787,9 @@ export default function TeeTimesPage() {
                                 title={`${t.playersAvailable} spots · ${t.layout}`}
                               >
                                 <span className="pill-time">{t.time}</span>
-                                <span className="pill-avail">{t.playersAvailable} avail</span>
+                                <span className="pill-avail">
+                                  {t.price !== undefined ? `$${t.price}` : `${t.playersAvailable} avail`}
+                                </span>
                               </a>
                             ))}
                             {hidden > 0 && (
@@ -1460,6 +1476,19 @@ export default function TeeTimesPage() {
           letter-spacing: 1px;
           text-transform: uppercase;
           color: var(--text-body);
+        }
+        .price-badge {
+          font-size: 0.6rem;
+          font-weight: 500;
+          letter-spacing: 0.5px;
+          color: var(--text-body);
+          white-space: nowrap;
+        }
+        .price-value {
+          font-family: "Cormorant Garamond", serif;
+          font-size: 1.1rem;
+          font-weight: 600;
+          color: var(--green-dark);
         }
         .holes-badge {
           font-size: 0.6rem;

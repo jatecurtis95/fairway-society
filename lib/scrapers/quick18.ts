@@ -88,12 +88,18 @@ export async function scrapeQuick18(
       const gameType = gameTypes[i] || "Golf";
       const bookingUrl = new URL(bookLink, url.origin).toString();
 
+      // Parse price from the cell (e.g. "$27.00")
+      const priceText = $cell.find(".mtrxPrice").text().trim();
+      const priceMatch = priceText.match(/\$(\d+(?:\.\d{2})?)/);
+      const price = priceMatch ? parseFloat(priceMatch[1]) : undefined;
+
       slots.push({
         time,
         availableSpots,
         layout,
         gameType,
         bookingUrl,
+        price,
       });
     });
   });

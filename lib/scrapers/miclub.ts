@@ -6,6 +6,7 @@ export type TeeSlot = {
   layout: string;
   gameType: string;
   bookingUrl: string;
+  price?: number;
 };
 
 const UA =
