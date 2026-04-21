@@ -3,6 +3,7 @@ import { z } from "zod";
 import { findNearbyCourses, findCoursesByName, findRandomCourses } from "@/lib/supabase";
 import { resolveAuPostcode } from "@/lib/postcode";
 import { scrapeMiClub } from "@/lib/scrapers/miclub";
+import { scrapeQuick18 } from "@/lib/scrapers/quick18";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -91,9 +92,10 @@ export async function POST(req: Request) {
 
   const perCourse = await Promise.all(
     target.map(async (c) => {
-      if (c.platform !== "miclub") return [] as Result[]; // Quick18 TBD
       try {
-        const slots = await scrapeMiClub(c.booking_url, body.date);
+        const slots = c.platform === "quick18"
+          ? await scrapeQuick18(c.booking_url, body.date)
+          : await scrapeMiClub(c.booking_url, body.date);
         const matched = slots
           .filter((s) => s.availableSpots >= body.players)
           .map<Result>((s) => ({
