@@ -86,12 +86,15 @@ export async function POST(req: Request) {
   const maxCourses = 25;
   const target = courses.slice(0, maxCourses);
 
+  // Track which courses returned slots
+  const coursesWithSlots = new Set<string>();
+
   const perCourse = await Promise.all(
     target.map(async (c) => {
       if (c.platform !== "miclub") return [] as Result[]; // Quick18 TBD
       try {
         const slots = await scrapeMiClub(c.booking_url, body.date);
-        return slots
+        const matched = slots
           .filter((s) => s.availableSpots >= body.players)
           .map<Result>((s) => ({
             course: c.name,
@@ -109,6 +112,8 @@ export async function POST(req: Request) {
             gameType: s.gameType,
             layout: s.layout,
           }));
+        if (matched.length > 0) coursesWithSlots.add(c.name);
+        return matched;
       } catch {
         return [] as Result[];
       }
@@ -145,10 +150,25 @@ export async function POST(req: Request) {
   });
 
   if (body.random && results.length) {
-    const coursesWithSlots = [...new Set(results.map((r) => r.course))];
-    const pick = coursesWithSlots[Math.floor(Math.random() * coursesWithSlots.length)];
+    const randomCourses = [...new Set(results.map((r) => r.course))];
+    const pick = randomCourses[Math.floor(Math.random() * randomCourses.length)];
     results = results.filter((r) => r.course === pick);
   }
 
-  return NextResponse.json({ results });
+  // Build list of courses with no available tee times (private / members only)
+  const privateCourses = target
+    .filter((c) => !coursesWithSlots.has(c.name))
+    .map((c) => ({
+      course: c.name,
+      courseUrl: c.booking_url,
+      distanceKm: c.distance_km,
+      lat: c.lat,
+      lng: c.lng,
+      suburb: c.suburb ?? undefined,
+      state: c.state ?? undefined,
+      imageUrl: c.image_url ?? undefined,
+    }))
+    .sort((a, b) => (a.distanceKm ?? 0) - (b.distanceKm ?? 0));
+
+  return NextResponse.json({ results, privateCourses });
 }

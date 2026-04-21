@@ -23,6 +23,17 @@ type TeeTime = {
   layout: string;
 };
 
+type PrivateCourse = {
+  course: string;
+  courseUrl: string;
+  distanceKm?: number;
+  lat?: number;
+  lng?: number;
+  suburb?: string;
+  state?: string;
+  imageUrl?: string;
+};
+
 type SearchState = "idle" | "locating" | "loading" | "done" | "error";
 type Daypart = "all" | "morning" | "midday" | "afternoon" | "twilight";
 type HolesFilter = "all" | "9" | "18";
@@ -121,6 +132,7 @@ export default function TeeTimesPage() {
   const [state, setState] = useState<SearchState>("idle");
   const [error, setError] = useState<string | null>(null);
   const [results, setResults] = useState<TeeTime[]>([]);
+  const [privateCourses, setPrivateCourses] = useState<PrivateCourse[]>([]);
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [locationLabel, setLocationLabel] = useState<string>("");
   const [locationDenied, setLocationDenied] = useState(false);
@@ -164,6 +176,7 @@ export default function TeeTimesPage() {
     setState("loading");
     setError(null);
     setResults([]);
+    setPrivateCourses([]);
     setExpanded({});
     try {
       const body = {
@@ -185,8 +198,9 @@ export default function TeeTimesPage() {
         const payload = (await res.json().catch(() => ({}))) as { error?: string };
         throw new Error(payload.error ?? `Search failed (${res.status})`);
       }
-      const data = (await res.json()) as { results: TeeTime[] };
+      const data = (await res.json()) as { results: TeeTime[]; privateCourses?: PrivateCourse[] };
       setResults(data.results);
+      setPrivateCourses(data.privateCourses ?? []);
       setState("done");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong.");
@@ -300,6 +314,7 @@ export default function TeeTimesPage() {
   }, [filtered, sortKey]);
 
   const totalSlots = filtered.length;
+  const totalCourses = groups.length + privateCourses.length;
   const isSearching = state === "loading" || state === "locating";
 
   // ─── Render ────────────────────────────────────────────────────────────────
@@ -482,7 +497,7 @@ export default function TeeTimesPage() {
         )}
 
         {/* ── Empty state ── */}
-        {state === "done" && results.length === 0 && (
+        {state === "done" && results.length === 0 && privateCourses.length === 0 && (
           <section className="results-section">
             <div className="container">
               <div className="empty-state">
@@ -506,7 +521,7 @@ export default function TeeTimesPage() {
         )}
 
         {/* ── Results ── */}
-        {state === "done" && results.length > 0 && (
+        {state === "done" && (results.length > 0 || privateCourses.length > 0) && (
           <section className="results-section">
             <div className="container">
 
@@ -514,8 +529,8 @@ export default function TeeTimesPage() {
               <div className="stats-bar">
                 <div className="stats-left">
                   <div className="stat">
-                    <span className="stat-value">{groups.length}</span>
-                    <span className="stat-label">Course{groups.length !== 1 ? "s" : ""}</span>
+                    <span className="stat-value">{totalCourses}</span>
+                    <span className="stat-label">Course{totalCourses !== 1 ? "s" : ""}</span>
                   </div>
                   <div className="stat-divider" />
                   <div className="stat">
@@ -643,19 +658,31 @@ export default function TeeTimesPage() {
               )}
 
               {/* Map view */}
-              {viewMode === "map" && groups.some((g) => g.lat && g.lng) && (
+              {viewMode === "map" && (groups.some((g) => g.lat && g.lng) || privateCourses.some((p) => p.lat && p.lng)) && (
                 <div className="map-wrap">
                   <CoursesMap
-                    pins={groups
-                      .filter((g) => typeof g.lat === "number" && typeof g.lng === "number")
-                      .map((g) => ({
-                        key: slugify(g.course),
-                        name: g.course,
-                        lat: g.lat!,
-                        lng: g.lng!,
-                        slotCount: g.times.length,
-                        isActive: activeCourse === slugify(g.course),
-                      }))}
+                    pins={[
+                      ...groups
+                        .filter((g) => typeof g.lat === "number" && typeof g.lng === "number")
+                        .map((g) => ({
+                          key: slugify(g.course),
+                          name: g.course,
+                          lat: g.lat!,
+                          lng: g.lng!,
+                          slotCount: g.times.length,
+                          isActive: activeCourse === slugify(g.course),
+                        })),
+                      ...privateCourses
+                        .filter((p) => typeof p.lat === "number" && typeof p.lng === "number")
+                        .map((p) => ({
+                          key: slugify(p.course),
+                          name: p.course,
+                          lat: p.lat!,
+                          lng: p.lng!,
+                          slotCount: 0,
+                          isActive: activeCourse === slugify(p.course),
+                        })),
+                    ]}
                     center={coords}
                     activeKey={activeCourse}
                     onSelect={handleSelectPin}
@@ -778,6 +805,83 @@ export default function TeeTimesPage() {
                   })}
                 </div>
               )}
+              {/* Private / no-availability courses */}
+              {privateCourses.length > 0 && (
+                <>
+                  <div className="private-divider">
+                    <span className="private-divider-line" />
+                    <span className="private-divider-label">Private &amp; Members-Only Courses</span>
+                    <span className="private-divider-line" />
+                  </div>
+                  <div className="course-grid">
+                    {privateCourses.map((pc) => {
+                      const key = slugify(pc.course);
+                      return (
+                        <article key={pc.course} className="course-card course-card-private">
+                          {pc.imageUrl ? (
+                            <div className="course-photo-wrap">
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img
+                                src={pc.imageUrl}
+                                alt={`${pc.course} golf course`}
+                                className="course-photo"
+                                loading="lazy"
+                              />
+                              <div className="course-photo-overlay course-photo-overlay-private" />
+                              <span className="course-photo-badge course-photo-badge-private">Private</span>
+                              {typeof pc.distanceKm === "number" && (
+                                <span className="course-photo-dist">
+                                  <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                                  </svg>
+                                  {formatDistance(pc.distanceKm)}
+                                </span>
+                              )}
+                            </div>
+                          ) : (
+                            <div className="course-photo-placeholder course-photo-placeholder-private">
+                              <span>🔒</span>
+                            </div>
+                          )}
+                          <div className="course-body">
+                            <header className="course-head">
+                              <div>
+                                <h3 className="course-name">{pc.course}</h3>
+                                <p className="course-meta">
+                                  {[
+                                    pc.suburb && pc.state ? `${pc.suburb}, ${pc.state}` : pc.state,
+                                    !pc.imageUrl && typeof pc.distanceKm === "number"
+                                      ? formatDistance(pc.distanceKm) + " away"
+                                      : null,
+                                  ]
+                                    .filter(Boolean)
+                                    .join(" · ")}
+                                </p>
+                              </div>
+                              <span className="private-badge">Members Only</span>
+                            </header>
+                            <p className="private-note">
+                              No public tee times available today. Contact the club directly for guest bookings.
+                            </p>
+                            <a
+                              href={pc.courseUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="book-btn book-btn-private"
+                            >
+                              Visit club website
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                              </svg>
+                            </a>
+                          </div>
+                        </article>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
+
             </div>
           </section>
         )}
@@ -1443,6 +1547,75 @@ export default function TeeTimesPage() {
           background: var(--gold);
           color: var(--green-dark);
           transform: translateX(2px);
+        }
+
+        /* ── Private courses ──────────────────────────────────────────────────── */
+        .private-divider {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          margin: 2.5rem 0 1.5rem;
+        }
+        .private-divider-line {
+          flex: 1;
+          height: 1px;
+          background: var(--border);
+        }
+        .private-divider-label {
+          font-family: "Montserrat", sans-serif;
+          font-size: 0.65rem;
+          font-weight: 600;
+          letter-spacing: 2.5px;
+          text-transform: uppercase;
+          color: var(--text-body);
+          white-space: nowrap;
+        }
+        .course-card-private {
+          opacity: 0.75;
+          transition: opacity 0.3s, border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+        }
+        .course-card-private:hover {
+          opacity: 1;
+        }
+        .course-photo-overlay-private {
+          background: linear-gradient(to bottom, rgba(27,58,45,0.15) 0%, rgba(27,58,45,0.7) 100%);
+        }
+        .course-photo-badge-private {
+          background: rgba(80,80,80,0.8);
+          color: #ccc;
+          border-color: #999;
+        }
+        .course-photo-placeholder-private {
+          background: linear-gradient(135deg, #3a3a3a 0%, #555 100%);
+        }
+        .private-badge {
+          font-size: 0.58rem;
+          font-weight: 600;
+          letter-spacing: 1.5px;
+          text-transform: uppercase;
+          color: var(--text-body);
+          border: 1px solid var(--border);
+          padding: 0.25rem 0.6rem;
+          white-space: nowrap;
+          border-radius: 2px;
+          flex-shrink: 0;
+        }
+        .private-note {
+          font-size: 0.8rem;
+          color: var(--text-body);
+          line-height: 1.6;
+          margin-bottom: 1.25rem;
+          flex: 1;
+        }
+        .book-btn-private {
+          background: transparent;
+          color: var(--text-body);
+          border: 1px solid var(--border);
+        }
+        .book-btn-private:hover {
+          background: var(--green-dark);
+          color: var(--cream);
+          border-color: var(--green-dark);
         }
 
         /* ── Mobile responsive ───────────────────────────────────────────────── */
