@@ -31,7 +31,7 @@ export default function SiteNav() {
     <>
       <nav className="nav">
         <div className="nav-inner">
-          <Link href="/" className="nav-logo" onClick={() => setOpen(false)}>
+          <Link href="/" prefetch={false} className="nav-logo" onClick={() => setOpen(false)}>
             The Fairway Society
           </Link>
 
@@ -39,7 +39,7 @@ export default function SiteNav() {
           <ul className="nav-links">
             {NAV_LINKS.map((l) => (
               <li key={l.href}>
-                <Link href={l.href}>{l.label}</Link>
+                <Link href={l.href} prefetch={false}>{l.label}</Link>
               </li>
             ))}
           </ul>
@@ -66,7 +66,7 @@ export default function SiteNav() {
         <ul className="mobile-links">
           {NAV_LINKS.map((l) => (
             <li key={l.href}>
-              <Link href={l.href} onClick={() => setOpen(false)}>
+              <Link href={l.href} prefetch={false} onClick={() => setOpen(false)}>
                 {l.label}
               </Link>
             </li>

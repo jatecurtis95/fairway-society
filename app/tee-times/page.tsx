@@ -159,7 +159,20 @@ export default function TeeTimesPage() {
   const [viewMode, setViewMode] = useState<"list" | "map">("list");
   const [activeCourse, setActiveCourse] = useState<string | null>(null);
   const [showFilters, setShowFilters] = useState(false);
+  const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
   const courseRefs = useRef<Record<string, HTMLElement | null>>({});
+
+  // Stale Google Places photo URLs (HTTP 400) get blocked by Chromium ORB —
+  // fall back to the placeholder when the upstream image fails to load.
+  const hasUsableImage = (url?: string) => !!url && !failedImages.has(url);
+  const markImageFailed = useCallback((url: string) => {
+    setFailedImages((s) => {
+      if (s.has(url)) return s;
+      const next = new Set(s);
+      next.add(url);
+      return next;
+    });
+  }, []);
 
   // ── Map pin selection ──────────────────────────────────────────────────────
   const handleSelectPin = useCallback((key: string) => {
@@ -715,7 +728,7 @@ export default function TeeTimesPage() {
                         className={`course-card ${isHighlighted ? "course-card-active" : ""}`}
                       >
                         {/* Photo */}
-                        {g.imageUrl ? (
+                        {hasUsableImage(g.imageUrl) ? (
                           <div className="course-photo-wrap">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
@@ -723,6 +736,8 @@ export default function TeeTimesPage() {
                               alt={`${g.course} golf course`}
                               className="course-photo"
                               loading="lazy"
+                              referrerPolicy="no-referrer"
+                              onError={() => g.imageUrl && markImageFailed(g.imageUrl)}
                             />
                             <div className="course-photo-overlay" />
                             <span className="course-photo-badge">{groupHolesLabel(g.times)}</span>
@@ -749,7 +764,7 @@ export default function TeeTimesPage() {
                               <p className="course-meta">
                                 {[
                                   g.suburb && g.state ? `${g.suburb}, ${g.state}` : g.state,
-                                  !g.imageUrl && typeof g.distanceKm === "number"
+                                  !hasUsableImage(g.imageUrl) && typeof g.distanceKm === "number"
                                     ? formatDistance(g.distanceKm) + " away"
                                     : null,
                                 ]
@@ -770,7 +785,7 @@ export default function TeeTimesPage() {
                                   </span>
                                 ) : null;
                               })()}
-                              {!g.imageUrl && (
+                              {!hasUsableImage(g.imageUrl) && (
                                 <span className="holes-badge">{groupHolesLabel(g.times)}</span>
                               )}
                             </div>
@@ -835,7 +850,7 @@ export default function TeeTimesPage() {
                       const key = slugify(pc.course);
                       return (
                         <article key={pc.course} className="course-card course-card-private">
-                          {pc.imageUrl ? (
+                          {hasUsableImage(pc.imageUrl) ? (
                             <div className="course-photo-wrap">
                               {/* eslint-disable-next-line @next/next/no-img-element */}
                               <img
@@ -843,6 +858,8 @@ export default function TeeTimesPage() {
                                 alt={`${pc.course} golf course`}
                                 className="course-photo"
                                 loading="lazy"
+                                referrerPolicy="no-referrer"
+                                onError={() => pc.imageUrl && markImageFailed(pc.imageUrl)}
                               />
                               <div className="course-photo-overlay course-photo-overlay-private" />
                               <span className="course-photo-badge course-photo-badge-private">No Times</span>
@@ -867,7 +884,7 @@ export default function TeeTimesPage() {
                                 <p className="course-meta">
                                   {[
                                     pc.suburb && pc.state ? `${pc.suburb}, ${pc.state}` : pc.state,
-                                    !pc.imageUrl && typeof pc.distanceKm === "number"
+                                    !hasUsableImage(pc.imageUrl) && typeof pc.distanceKm === "number"
                                       ? formatDistance(pc.distanceKm) + " away"
                                       : null,
                                   ]
